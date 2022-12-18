@@ -14,5 +14,8 @@ namespace Coworking_Booking.Api.Brokers.Storages
 
         public IQueryable<User> SelectAllUsers() =>
             SelectAll<User>();
+
+        public async ValueTask<User> UpdateUserAsync(User user) =>
+           await UpdateAsync(user);
     }
 }
