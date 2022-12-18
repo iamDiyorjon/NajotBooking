@@ -1,6 +1,5 @@
 ﻿using Coworking_Booking.Api.Models.Users;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,8 +14,5 @@ namespace Coworking_Booking.Api.Brokers.Storages
 
         public IQueryable<User> SelectAllUsers() =>
             SelectAll<User>();
-
-        public async ValueTask<User> SelectUserByIdAsync(Guid id) =>
-            await SelectAsync<User>(id);
     }
 }
