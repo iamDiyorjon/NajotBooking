@@ -1,3 +1,8 @@
+// ---------------------------------------------------------------
+// Copyright (c) Coalition Of The THE STANDART SHARPISTS
+// Free To Use To Book Places In Coworking Zones
+// ---------------------------------------------------------------
+
 using Coworking_Booking.Api.Brokers.DateTimes;
 using Coworking_Booking.Api.Brokers.Loggings;
 using Coworking_Booking.Api.Brokers.Storages;
