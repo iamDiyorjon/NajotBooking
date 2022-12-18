@@ -1,4 +1,9 @@
-﻿using Coworking_Booking.Api.Models.Seats;
+﻿// ---------------------------------------------------------------
+// Copyright (c) Coalition Of The THE STANDART SHARPISTS
+// Free To Use To Book Places In Coworking Zones
+// ---------------------------------------------------------------
+
+using Coworking_Booking.Api.Models.Seats;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;

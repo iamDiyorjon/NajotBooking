@@ -1,4 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿// ---------------------------------------------------------------
+// Copyright (c) Coalition Of The THE STANDART SHARPISTS
+// Free To Use To Book Places In Coworking Zones
+// ---------------------------------------------------------------
+
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace Coworking_Booking.Api.Brokers.Loggings
