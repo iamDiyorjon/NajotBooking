@@ -1,4 +1,9 @@
-﻿namespace Coworking_Booking.Api.Models.Users
+﻿// ---------------------------------------------------------------
+// Copyright (c) Coalition Of The THE STANDART SHARPISTS
+// Free To Use To Book Places In Coworking Zones
+// ---------------------------------------------------------------
+
+namespace Coworking_Booking.Api.Models.Users
 {
     public class User
     {

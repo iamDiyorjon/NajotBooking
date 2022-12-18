@@ -1,4 +1,9 @@
-﻿using Coworking_Booking.Api.Brokers.Storages;
+﻿// ---------------------------------------------------------------
+// Copyright (c) Coalition Of The THE STANDART SHARPISTS
+// Free To Use To Book Places In Coworking Zones
+// ---------------------------------------------------------------
+
+using Coworking_Booking.Api.Brokers.Storages;
 using Coworking_Booking.Api.Models.Users;
 using System;
 using System.Linq;
@@ -29,7 +34,7 @@ namespace Coworking_Booking.Api.Services.Foundations
 
         public ValueTask<User> RemoveUser(User user) =>
             this.storageBroker.DeleteUserAsync(user);
-            
+
     }
 
 }

@@ -1,5 +1,8 @@
-﻿using Coworking_Booking.Api.Models.Seats;
-using Coworking_Booking.Api.Models.Users;
+﻿// ---------------------------------------------------------------
+// Copyright (c) Coalition Of The THE STANDART SHARPISTS
+// Free To Use To Book Places In Coworking Zones
+// ---------------------------------------------------------------
+
 using EFxceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -35,9 +38,9 @@ namespace Coworking_Booking.Api.Brokers.Storages
             return broker.Set<T>();
         }
 
-        private async ValueTask<T>SelectAsync<T>(params object[]objectIds) where T : class
+        private async ValueTask<T> SelectAsync<T>(params object[] objectIds) where T : class
         {
-            var broker =new StorageBroker(this.configuration);
+            var broker = new StorageBroker(this.configuration);
             return await broker.FindAsync<T>(objectIds);
         }
 
