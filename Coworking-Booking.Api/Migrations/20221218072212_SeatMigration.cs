@@ -1,5 +1,10 @@
-﻿using System;
+﻿// ---------------------------------------------------------------
+// Copyright (c) Coalition Of The THE STANDART SHARPISTS
+// Free To Use To Book Places In Coworking Zones
+// ---------------------------------------------------------------
+
 using Microsoft.EntityFrameworkCore.Migrations;
+using System;
 
 #nullable disable
 
