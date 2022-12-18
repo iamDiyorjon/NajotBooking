@@ -27,7 +27,7 @@ namespace Coworking_Booking.Api.Controllers
         [HttpGet]
         public ActionResult<IQueryable<Seat>> GetAll()
         {
-            IQueryable<Seat> seats = this.seatService.RetrieveAllSeat();
+            IQueryable<Seat> seats = this.seatService.RetrieveAllSeatAsync();
             return Ok(seats);
         }
 

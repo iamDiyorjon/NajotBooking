@@ -13,9 +13,30 @@ namespace Coworking_Booking.Api.Services.Foundations.Seats
             ValidateSeatNotNull(seat);
             Validate(
                 (Rule: IsInvalid(seat.Id), Parameter: nameof(Seat.Id)),
-                (Rule: IsInvalid(seat.UserId),Parameter:nameof(Seat.Id)),
-                (Rule:IsInvalid(seat.Floor),Parameter:nameof(Seat.Floor)),
-                (Rule:IsInvalid(seat.SeatNumber),Parameter:nameof(Seat.SeatNumber)));
+                (Rule: IsInvalid(seat.UserId), Parameter: nameof(Seat.Id)),
+                (Rule: IsInvalid(seat.Floor), Parameter: nameof(Seat.Floor)),
+                (Rule: IsInvalid(seat.SeatNumber), Parameter: nameof(Seat.SeatNumber)),
+                (Rule: IsInvalid(seat.CraetedDate), Parameter: nameof(Seat.CraetedDate)),
+                (Rule: IsInvalid(seat.UpdatedDate), Parameter: nameof(Seat.UpdatedDate)));
+        }
+        private void ValidateSeatOnModify(Seat seat)
+        {
+            ValidateSeatNotNull(seat);
+            Validate(
+                 (Rule: IsInvalid(seat.Id), Parameter: nameof(Seat.Id)),
+                 (Rule: IsInvalid(seat.UserId), Parameter: nameof(Seat.Id)),
+                 (Rule: IsInvalid(seat.Floor), Parameter: nameof(Seat.Floor)),
+                 (Rule: IsInvalid(seat.SeatNumber), Parameter: nameof(Seat.SeatNumber)),
+                 (Rule: IsInvalid(seat.CraetedDate), Parameter: nameof(Seat.CraetedDate)),
+                 (Rule: IsInvalid(seat.UpdatedDate), Parameter: nameof(Seat.UpdatedDate)));
+        }
+
+        private void ValidateStorageSeat(Seat maybeSeat,Guid seatId)
+        {
+            if(maybeSeat is null )
+            {
+                throw new NotFoundUserException(seatId);
+            }
         }
         private static dynamic IsInvalid(int floor) => new
         {
@@ -27,6 +48,11 @@ namespace Coworking_Booking.Api.Services.Foundations.Seats
         {
             Condition = id == default,
             Message = "Id is required"
+        };
+        private static dynamic IsInvalid(DateTimeOffset date) => new
+        {
+            Condition = date == default,
+            Message = "Date is required"
         };
         private static void ValidateSeatNotNull(Seat seat)
         {

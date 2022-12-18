@@ -10,8 +10,8 @@ namespace Coworking_Booking.Api.Services.Foundations.Seats
     {
         ValueTask<Seat> AddSeatAsync(Seat seat);
         ValueTask<Seat> RetrieveSeatByIdAsync(Guid seatId);
-        IQueryable<Seat> RetrieveAllSeat();
+        IQueryable<Seat> RetrieveAllSeatAsync();
         ValueTask<Seat> ModifySeatAsync(Seat seat);
-        ValueTask<Seat> RemoveSeat(Seat seat);
+        ValueTask<Seat> RemoveSeatByIdAsync(Seat seat);
     }
 }
