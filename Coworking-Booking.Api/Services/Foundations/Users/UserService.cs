@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Coworking_Booking.Api.Services.Foundations
+namespace Coworking_Booking.Api.Services.Foundations.Users
 {
     public partial class UserService : IUserService
     {
@@ -16,20 +16,20 @@ namespace Coworking_Booking.Api.Services.Foundations
         }
 
         public ValueTask<User> AddUserAsync(User user) =>
-            this.storageBroker.InsertUserAsync(user);
+            storageBroker.InsertUserAsync(user);
 
         public ValueTask<User> RetrieveUserByIdAsync(Guid userId) =>
-            this.storageBroker.SelectUserByIdAsync(userId);
+            storageBroker.SelectUserByIdAsync(userId);
 
         public IQueryable<User> RetrieveAllUsers() =>
-            this.storageBroker.SelectAllUsers();
+            storageBroker.SelectAllUsers();
 
         public ValueTask<User> ModifyUserAsync(User user) =>
-            this.storageBroker.UpdateUserAsync(user);
+            storageBroker.UpdateUserAsync(user);
 
         public ValueTask<User> RemoveUser(User user) =>
-            this.storageBroker.DeleteUserAsync(user);
-            
+            storageBroker.DeleteUserAsync(user);
+
     }
 
 }

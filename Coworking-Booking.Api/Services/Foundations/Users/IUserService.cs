@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Coworking_Booking.Api.Services.Foundations
+namespace Coworking_Booking.Api.Services.Foundations.Users
 {
     public interface IUserService
     {
