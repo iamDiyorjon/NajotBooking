@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Coworking_Booking.Api.Services.Foundations.Seats
 {
-    public class SeatService : ISeatService
+    public partial class SeatService : ISeatService
     {
         private readonly IStorageBroker storageBroker;
         private readonly IDateTimeBroker dateTimeBroker;
@@ -33,8 +33,12 @@ namespace Coworking_Booking.Api.Services.Foundations.Seats
         public ValueTask<Seat> RemoveSeat(Seat seat) =>
             this.storageBroker.DeleteSeatAsync(seat);
 
-        public IQueryable<Seat> RetrieveAllSeat() =>
-            this.storageBroker.SelectAllSeats();
+        public IQueryable<Seat> RetrieveAllSeat()
+        { 
+            var emptySeats = GetEmptySeats();
+            return emptySeats;
+            
+        }
 
         public ValueTask<Seat> RetrieveSeatByIdAsync(Guid seatId) =>
             this.storageBroker.SelectSeatByIdAsync(seatId);
