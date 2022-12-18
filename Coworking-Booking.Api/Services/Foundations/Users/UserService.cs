@@ -1,4 +1,5 @@
-﻿using Coworking_Booking.Api.Brokers.Storages;
+﻿using Coworking_Booking.Api.Brokers.Loggings;
+using Coworking_Booking.Api.Brokers.Storages;
 using Coworking_Booking.Api.Models.Users;
 using System;
 using System.Linq;
@@ -9,6 +10,15 @@ namespace Coworking_Booking.Api.Services.Foundations.Users
     public partial class UserService : IUserService
     {
         private readonly IStorageBroker storageBroker;
+        private readonly ILoggingBroker loggingBroker;
+
+        public UserService(
+            IStorageBroker storageBroker,
+            ILoggingBroker loggingBroker)
+        {
+            this.storageBroker = storageBroker;
+            this.loggingBroker = loggingBroker;
+        }
 
         public UserService(IStorageBroker storageBroker)
         {
@@ -31,5 +41,4 @@ namespace Coworking_Booking.Api.Services.Foundations.Users
             storageBroker.DeleteUserAsync(user);
 
     }
-
 }
