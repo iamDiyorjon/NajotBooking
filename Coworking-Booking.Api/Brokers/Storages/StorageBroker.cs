@@ -1,4 +1,6 @@
-﻿using EFxceptions;
+﻿using Coworking_Booking.Api.Models.Seats;
+using Coworking_Booking.Api.Models.Users;
+using EFxceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System.Linq;

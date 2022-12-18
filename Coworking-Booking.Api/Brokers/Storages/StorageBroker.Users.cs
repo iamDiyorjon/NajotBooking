@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Coworking_Booking.Api.Brokers.Storages
 {
-    public partial class StorageBroker : IStorageBroker
+    public partial class StorageBroker 
     {
         public DbSet<User> Users { get; set; }
   

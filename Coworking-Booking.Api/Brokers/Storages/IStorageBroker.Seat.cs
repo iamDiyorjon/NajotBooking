@@ -8,10 +8,10 @@ namespace Coworking_Booking.Api.Brokers.Storages
 {
     public partial interface IStorageBroker
     {
-        ValueTask<Seat> InsertSeatAsync(User user);
+        ValueTask<Seat> InsertSeatAsync(Seat seat);
         IQueryable<Seat> SelectAllSeats();
         ValueTask<Seat> SelectSeatByIdAsync(Guid id);
-        ValueTask<Seat> UpdateSeatAsync(User user);
-        ValueTask<Seat> DeleteSeatAsync(User user);
+        ValueTask<Seat> UpdateSeatAsync(Seat seat);
+        ValueTask<Seat> DeleteSeatAsync(Seat seat);
     }
 }
