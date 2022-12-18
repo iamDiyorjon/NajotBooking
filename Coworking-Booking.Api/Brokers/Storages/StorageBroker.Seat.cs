@@ -1,5 +1,4 @@
 ﻿using Coworking_Booking.Api.Models.Seats;
-using Coworking_Booking.Api.Models.Users;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
