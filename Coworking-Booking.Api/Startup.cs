@@ -1,3 +1,5 @@
+using Coworking_Booking.Api.Brokers.Loggings;
+using Coworking_Booking.Api.Brokers.Storages;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +20,8 @@ namespace Coworking_Booking.Api
         {
 
             services.AddControllers();
+            services.AddTransient<IStorageBroker, StorageBroker>();
+            services.AddTransient<ILoggingBroker, LoggingBroker>();
 
             services.AddSwaggerGen(config =>
             {
