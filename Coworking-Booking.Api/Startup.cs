@@ -6,6 +6,7 @@
 using Coworking_Booking.Api.Brokers.DateTimes;
 using Coworking_Booking.Api.Brokers.Loggings;
 using Coworking_Booking.Api.Brokers.Storages;
+using Coworking_Booking.Api.Services.Foundations.Seats;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -29,6 +30,7 @@ namespace Coworking_Booking.Api
             services.AddTransient<IStorageBroker, StorageBroker>();
             services.AddTransient<ILoggingBroker, LoggingBroker>();
             services.AddTransient<IDateTimeBroker, DateTimeBroker>();
+            services.AddTransient<ISeatService, SeatService>();
 
             services.AddSwaggerGen(config =>
             {
