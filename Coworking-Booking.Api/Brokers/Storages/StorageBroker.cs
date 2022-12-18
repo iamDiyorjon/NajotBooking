@@ -1,6 +1,7 @@
 ﻿using EFxceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Coworking_Booking.Api.Brokers.Storages
@@ -23,6 +24,13 @@ namespace Coworking_Booking.Api.Brokers.Storages
             await broker.SaveChangesAsync();
 
             return @object;
+        }
+
+        private IQueryable<T> SelectAll<T>() where T : class
+        {
+            var broker = new StorageBroker(this.configuration);
+
+            return broker.Set<T>();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
