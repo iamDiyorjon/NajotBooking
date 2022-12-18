@@ -23,7 +23,6 @@ namespace Coworking_Booking.Api.Services.Foundations.Users
         public UserService(IStorageBroker storageBroker)
         {
             this.storageBroker = storageBroker;
-            this.dateTimeBroker = dateTimeBroker;
             this.loggingBroker = loggingBroker;
         }
 
