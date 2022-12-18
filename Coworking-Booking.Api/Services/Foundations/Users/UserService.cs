@@ -13,7 +13,8 @@ namespace Coworking_Booking.Api.Services.Foundations.Users
         private readonly IStorageBroker storageBroker;
         private readonly IDateTimeBroker dateTimeBroker;
         private readonly ILoggingBroker loggingBroker;
-        public UserService(IStorageBroker storageBroker,
+        public UserService(
+            IStorageBroker storageBroker,
             IDateTimeBroker dateTimeBroker,
             ILoggingBroker loggingBroker)
         {
