@@ -11,6 +11,7 @@ namespace Coworking_Booking.Api.Models.Seats
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
+        public Branch Branch { get; set; }
         public int Floor { get; set; }
         public int SeatNumber { get; set; }
         public bool IsBooked { get; set; }
