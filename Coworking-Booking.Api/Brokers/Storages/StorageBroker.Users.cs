@@ -14,7 +14,7 @@ namespace Coworking_Booking.Api.Brokers.Storages
             await InsertAsync(user);
 
         public IQueryable<User> SelectAllUsers() =>
-            SelectAll<User>();
+            SelectAll<User>() ;
 
         public async ValueTask<User> SelectUserByIdAsync(Guid id) =>
             await SelectAsync<User>(id);
