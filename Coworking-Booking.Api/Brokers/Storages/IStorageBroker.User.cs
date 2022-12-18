@@ -9,5 +9,6 @@ namespace Coworking_Booking.Api.Brokers.Storages
         ValueTask<User> InsertUserAsync(User user);
         IQueryable<User> SelectAllUsers();
         ValueTask<User> UpdateUserAsync(User user);
+        ValueTask<User> DeleteUserAsync(User user);
     }
 }
