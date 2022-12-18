@@ -4,7 +4,6 @@
 // ---------------------------------------------------------------
 
 using Coworking_Booking.Api.Models.Users;
-using Microsoft.Extensions.Hosting;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
