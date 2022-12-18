@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Coworking_Booking.Api.Services.Foundations.Seats
 {
-    public class SeatService : ISeatService
+    public partial class SeatService : ISeatService
     {
         private readonly IStorageBroker storageBroker;
         private readonly IDateTimeBroker dateTimeBroker;
@@ -25,7 +25,12 @@ namespace Coworking_Booking.Api.Services.Foundations.Seats
         }
 
         public ValueTask<Seat> AddSeatAsync(Seat seat) =>
-            this.storageBroker.InsertSeatAsync(seat);
+            TryCatch(async () =>
+            {
+                ValidateSeat(seat);
+
+                return await this.storageBroker.InsertSeatAsync(seat);
+            });
         
         public ValueTask<Seat> ModifySeatAsync(Seat seat) =>
             this.storageBroker.UpdateSeatAsync(seat);
