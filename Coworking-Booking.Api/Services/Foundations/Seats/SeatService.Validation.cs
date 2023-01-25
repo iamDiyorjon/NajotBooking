@@ -13,9 +13,7 @@ namespace Coworking_Booking.Api.Services.Foundations.Seats
             ValidateSeatNotNull(seat);
             Validate(
                 (Rule: IsInvalid(seat.Id), Parameter: nameof(Seat.Id)),
-                (Rule: IsInvalid(seat.UserId),Parameter:nameof(Seat.Id)),
-                (Rule:IsInvalid(seat.Floor),Parameter:nameof(Seat.Floor)),
-                (Rule:IsInvalid(seat.SeatNumber),Parameter:nameof(Seat.SeatNumber)));
+                (Rule: IsInvalid(seat.Floor), Parameter: nameof(Seat.Floor)));
         }
         private static dynamic IsInvalid(int floor) => new
         {
