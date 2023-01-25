@@ -1,13 +1,13 @@
-﻿using Coworking_Booking.Api.Models.Seats.Exceptions;
-using Coworking_Booking.Api.Models.Seats;
-using EFxceptions.Models.Exceptions;
+﻿using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
+using NajotBooking.Api.Models.Seats;
+using NajotBooking.Api.Models.Seats.Exceptions;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System;
 using Xeptions;
 
-namespace Coworking_Booking.Api.Services.Foundations.Seats
+namespace NajotBooking.Api.Services.Foundations.Seats
 {
     public partial class SeatService
     {

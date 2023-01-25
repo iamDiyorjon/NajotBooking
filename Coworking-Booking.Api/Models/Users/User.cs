@@ -3,7 +3,7 @@
 // Free To Use To Book Places In Coworking Zones
 // ---------------------------------------------------------------
 
-namespace Coworking_Booking.Api.Models.Users
+namespace NajotBooking.Api.Models.Users
 {
     public class User
     {

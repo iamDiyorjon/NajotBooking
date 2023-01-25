@@ -3,12 +3,12 @@
 // Free To Use To Book Places In Coworking Zones
 // ---------------------------------------------------------------
 
-using Coworking_Booking.Api.Models.Users;
+using NajotBooking.Api.Models.Users;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Coworking_Booking.Api.Services.Foundations.Users
+namespace NajotBooking.Api.Services.Foundations.Users
 {
     public interface IUserService
     {

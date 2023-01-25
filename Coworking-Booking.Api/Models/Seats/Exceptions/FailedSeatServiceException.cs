@@ -1,7 +1,7 @@
 ﻿using System;
 using Xeptions;
 
-namespace Coworking_Booking.Api.Models.Seats.Exceptions
+namespace NajotBooking.Api.Models.Seats.Exceptions
 {
     public class FailedSeatServiceException : Xeption
     {

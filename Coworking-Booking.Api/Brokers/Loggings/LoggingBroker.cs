@@ -6,7 +6,7 @@
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace Coworking_Booking.Api.Brokers.Loggings
+namespace NajotBooking.Api.Brokers.Loggings
 {
     public class LoggingBroker : ILoggingBroker
     {

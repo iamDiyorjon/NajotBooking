@@ -1,11 +1,11 @@
-﻿using Coworking_Booking.Api.Brokers.Loggings;
-using Coworking_Booking.Api.Brokers.Storages;
-using Coworking_Booking.Api.Models.Users;
+﻿using NajotBooking.Api.Brokers.Loggings;
+using NajotBooking.Api.Brokers.Storages;
+using NajotBooking.Api.Models.Users;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Coworking_Booking.Api.Services.Foundations.Users
+namespace NajotBooking.Api.Services.Foundations.Users
 {
     public partial class UserService : IUserService
     {

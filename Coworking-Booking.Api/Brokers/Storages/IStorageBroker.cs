@@ -3,7 +3,7 @@
 // Free To Use To Book Places In Coworking Zones
 // ---------------------------------------------------------------
 
-namespace Coworking_Booking.Api.Brokers.Storages
+namespace NajotBooking.Api.Brokers.Storages
 {
     public partial interface IStorageBroker
     {}

@@ -5,7 +5,7 @@
 
 using System;
 
-namespace Coworking_Booking.Api.Brokers.Loggings
+namespace NajotBooking.Api.Brokers.Loggings
 {
     public interface ILoggingBroker
     {

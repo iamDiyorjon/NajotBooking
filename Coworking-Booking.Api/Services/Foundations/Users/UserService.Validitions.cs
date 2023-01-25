@@ -3,7 +3,7 @@
 // Free To Use to Book Places in Coworking Zones
 // ---------------------------------------------------------------
 
-namespace Coworking_Booking.Api.Services.Foundations.Users
+namespace NajotBooking.Api.Services.Foundations.Users
 {
     public partial class UserService
     {

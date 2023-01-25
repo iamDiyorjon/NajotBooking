@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Coworking_Booking.Api.Brokers.Storages
+namespace NajotBooking.Api.Brokers.Storages
 {
     public partial class StorageBroker : EFxceptionsContext, IStorageBroker
     {

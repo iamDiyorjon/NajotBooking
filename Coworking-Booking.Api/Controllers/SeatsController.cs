@@ -1,11 +1,11 @@
-﻿using Coworking_Booking.Api.Models.Seats;
-using Coworking_Booking.Api.Services.Foundations.Seats;
+﻿using NajotBooking.Api.Models.Seats;
+using NajotBooking.Api.Services.Foundations.Seats;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Coworking_Booking.Api.Controllers
+namespace NajotBooking.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

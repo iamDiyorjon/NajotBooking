@@ -1,10 +1,10 @@
-﻿using Coworking_Booking.Api.Models.Seats.Exceptions;
-using Coworking_Booking.Api.Models.Seats;
+﻿using NajotBooking.Api.Models.Seats.Exceptions;
+using NajotBooking.Api.Models.Seats;
 using System;
 using System.Reflection.Metadata;
 using System.Data;
 
-namespace Coworking_Booking.Api.Services.Foundations.Seats
+namespace NajotBooking.Api.Services.Foundations.Seats
 {
     public partial class SeatService
     {

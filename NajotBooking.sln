@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coworking-Booking.Api", "Coworking-Booking.Api\Coworking-Booking.Api.csproj", "{14114A66-DCE1-453E-A829-E2C9EB560860}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NajotBooking.Api", "NajotBooking.Api\NajotBooking.Api.csproj", "{14114A66-DCE1-453E-A829-E2C9EB560860}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Coworking-Booking.Api.Tests.Unit", "Coworking-Booking.Api.Tests.Unit\Coworking-Booking.Api.Tests.Unit.csproj", "{8634654A-F307-455C-86DB-2CEB708AC101}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NajotBooking.Api.Tests.Unit", "NajotBooking.Api.Tests.Unit\NajotBooking.Api.Tests.Unit.csproj", "{8634654A-F307-455C-86DB-2CEB708AC101}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoworkingBooking.Api.Infrastructure.Build", "CoworkingBooking.Api.Infrastructure.Build\CoworkingBooking.Api.Infrastructure.Build.csproj", "{E6C3C8DE-675E-4991-8F4A-F24ECAC4E31F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NajotBooking.Api.Infrastructure.Build", "NajotBooking.Api.Infrastructure.Build\NajotBooking.Api.Infrastructure.Build.csproj", "{E6C3C8DE-675E-4991-8F4A-F24ECAC4E31F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
