@@ -5,6 +5,7 @@
 
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Coworking_Booking.Api.Models.Orders;
 
@@ -20,5 +21,8 @@ namespace Coworking_Booking.Api.Brokers.Storages
 
         public async ValueTask<Order> SelectOrderById(Guid id) =>
             await SelectAsync<Order>(id);
+
+        public async ValueTask<Order> DeleteOrderAsync(Order order) => 
+            await DeleteAsync(order);
     }
 }
