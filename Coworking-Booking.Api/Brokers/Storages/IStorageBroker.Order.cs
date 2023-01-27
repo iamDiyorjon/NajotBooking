@@ -15,5 +15,6 @@ namespace Coworking_Booking.Api.Brokers.Storages
         ValueTask<Order> InsertOrderAsync(Order order);
         IQueryable<Order> SelectAllOrders();
         ValueTask<Order> SelectOrderById(Guid id);
+        ValueTask<Order> UpdateOrderAsync(Order order);
     }
 }
