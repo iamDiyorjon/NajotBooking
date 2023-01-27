@@ -20,5 +20,9 @@ namespace Coworking_Booking.Api.Brokers.Storages
 
         public async ValueTask<Order> SelectOrderById(Guid id) =>
             await SelectAsync<Order>(id);
+
+        public async ValueTask<Order> UpdateOrderAsync(Order order) => 
+            await UpdateAsync(order);
+
     }
 }
