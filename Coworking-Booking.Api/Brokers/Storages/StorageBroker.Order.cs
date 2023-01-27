@@ -3,6 +3,7 @@
 // Free To Use to Book Places in Coworking Zones
 // ---------------------------------------------------------------
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Coworking_Booking.Api.Models.Orders;
@@ -16,5 +17,8 @@ namespace Coworking_Booking.Api.Brokers.Storages
 
         public IQueryable<Order> SelectAllOrders() =>
             SelectAll<Order>();
+
+        public async ValueTask<Order> SelectOrderById(Guid id) =>
+            await SelectAsync<Order>(id);
     }
 }
