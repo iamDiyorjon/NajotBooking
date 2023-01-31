@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <RootNamespace>Coworking_Booking.Api.Tests.Unit</RootNamespace>
+    <RootNamespace>NajotBooking.Api.Tests.Unit</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
