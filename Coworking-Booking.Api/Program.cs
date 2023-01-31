@@ -6,7 +6,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace Coworking_Booking.Api
+namespace NajotBooking.Api
 {
     public class Program
     {

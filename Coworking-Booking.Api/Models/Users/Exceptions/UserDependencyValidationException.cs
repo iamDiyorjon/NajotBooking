@@ -5,7 +5,7 @@
 
 using Xeptions;
 
-namespace Coworking_Booking.Api.Models.Users.Excaptions
+namespace NajotBooking.Api.Models.Users.Excaptions
 {
     public class UserDependencyValidationException: Xeption
     {

@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Coworking-Booking.Api\Coworking-Booking.Api.csproj" />
+    <ProjectReference Include="..\Coworking-Booking.Api\NajotBooking.Api.csproj" />
   </ItemGroup>
 
 </Project>

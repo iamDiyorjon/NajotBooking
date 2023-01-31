@@ -1,4 +1,4 @@
-﻿namespace Coworking_Booking.Api.Models.Seats
+﻿namespace NajotBooking.Api.Models.Seats
 {
     public enum Branch
     {

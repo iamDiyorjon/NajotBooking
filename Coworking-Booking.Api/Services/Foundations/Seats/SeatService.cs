@@ -1,12 +1,12 @@
-﻿using Coworking_Booking.Api.Brokers.DateTimes;
-using Coworking_Booking.Api.Brokers.Loggings;
-using Coworking_Booking.Api.Brokers.Storages;
-using Coworking_Booking.Api.Models.Seats;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using NajotBooking.Api.Brokers.DateTimes;
+using NajotBooking.Api.Brokers.Loggings;
+using NajotBooking.Api.Brokers.Storages;
+using NajotBooking.Api.Models.Seats;
 
-namespace Coworking_Booking.Api.Services.Foundations.Seats
+namespace NajotBooking.Api.Services.Foundations.Seats
 {
     public partial class SeatService : ISeatService
     {
@@ -31,10 +31,10 @@ namespace Coworking_Booking.Api.Services.Foundations.Seats
 
                 return await this.storageBroker.InsertSeatAsync(seat);
             });
-        
+
         public ValueTask<Seat> ModifySeatAsync(Seat seat) =>
             this.storageBroker.UpdateSeatAsync(seat);
-        
+
         public ValueTask<Seat> RemoveSeat(Seat seat) =>
             this.storageBroker.DeleteSeatAsync(seat);
 

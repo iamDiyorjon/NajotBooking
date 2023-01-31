@@ -1,6 +1,4 @@
-using Xunit;
-
-namespace Coworking_Booking.Api.Tests.Unit
+namespace NajotBooking.Api.Tests.Unit
 {
     public class UnitTest1
     {

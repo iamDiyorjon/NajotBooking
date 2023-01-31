@@ -1,10 +1,9 @@
-﻿using Coworking_Booking.Api.Models.Users;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System;
-using Coworking_Booking.Api.Models.Seats;
+using NajotBooking.Api.Models.Seats;
 
-namespace Coworking_Booking.Api.Services.Foundations.Seats
+namespace NajotBooking.Api.Services.Foundations.Seats
 {
     public interface ISeatService
     {

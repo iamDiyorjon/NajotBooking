@@ -4,7 +4,7 @@
 // ---------------------------------------------------------------
 
 using System;
-namespace Coworking_Booking.Api.Brokers.DateTimes
+namespace NajotBooking.Api.Brokers.DateTimes
 {
     public class DateTimeBroker : IDateTimeBroker
     {

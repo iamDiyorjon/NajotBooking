@@ -3,18 +3,18 @@
 // Free To Use To Book Places In Coworking Zones
 // ---------------------------------------------------------------
 
-using Coworking_Booking.Api.Brokers.DateTimes;
-using Coworking_Booking.Api.Brokers.Loggings;
-using Coworking_Booking.Api.Brokers.Storages;
-using Coworking_Booking.Api.Services.Foundations.Seats;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using NajotBooking.Api.Brokers.DateTimes;
+using NajotBooking.Api.Brokers.Loggings;
+using NajotBooking.Api.Brokers.Storages;
+using NajotBooking.Api.Services.Foundations.Seats;
 
-namespace Coworking_Booking.Api
+namespace NajotBooking.Api
 {
     public class Startup
     {

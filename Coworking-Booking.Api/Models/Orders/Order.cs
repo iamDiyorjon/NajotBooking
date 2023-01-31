@@ -5,7 +5,7 @@
 
 using System;
 
-namespace Coworking_Booking.Api.Models.Orders
+namespace NajotBooking.Api.Models.Orders
 {
     public class Order
     {

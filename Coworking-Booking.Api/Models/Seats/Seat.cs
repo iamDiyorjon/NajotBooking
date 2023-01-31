@@ -5,7 +5,7 @@
 
 using System;
 
-namespace Coworking_Booking.Api.Models.Seats
+namespace NajotBooking.Api.Models.Seats
 {
     public class Seat
     {

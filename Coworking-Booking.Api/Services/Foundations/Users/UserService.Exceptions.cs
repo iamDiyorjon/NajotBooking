@@ -1,14 +1,14 @@
-﻿using Coworking_Booking.Api.Models.Users.Excaptions;
-using Coworking_Booking.Api.Models.Users;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
-using System;
+using NajotBooking.Api.Models.Users;
+using NajotBooking.Api.Models.Users.Excaptions;
 using Xeptions;
 
-namespace Coworking_Booking.Api.Services.Foundations.Users
+namespace NajotBooking.Api.Services.Foundations.Users
 {
     public partial class UserService
     {

@@ -3,13 +3,13 @@
 // Free To Use To Book Places In Coworking Zones
 // ---------------------------------------------------------------
 
+using System.Linq;
+using System.Threading.Tasks;
 using EFxceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Coworking_Booking.Api.Brokers.Storages
+namespace NajotBooking.Api.Brokers.Storages
 {
     public partial class StorageBroker : EFxceptionsContext, IStorageBroker
     {

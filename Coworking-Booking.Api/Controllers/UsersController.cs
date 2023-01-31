@@ -1,15 +1,13 @@
-﻿using Coworking_Booking.Api.Services.Foundations.Seats;
-using Microsoft.AspNetCore.Mvc;
-using RESTFulSense.Controllers;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System;
-using Coworking_Booking.Api.Services.Foundations.Users;
-using Coworking_Booking.Api.Models.Users;
-using Microsoft.Extensions.Hosting;
-using Coworking_Booking.Api.Models.Users.Excaptions;
+using Microsoft.AspNetCore.Mvc;
+using NajotBooking.Api.Models.Users;
+using NajotBooking.Api.Models.Users.Excaptions;
+using NajotBooking.Api.Services.Foundations.Users;
+using RESTFulSense.Controllers;
 
-namespace Coworking_Booking.Api.Controllers
+namespace NajotBooking.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
