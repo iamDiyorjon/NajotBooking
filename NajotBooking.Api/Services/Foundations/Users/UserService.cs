@@ -1,0 +1,45 @@
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using NajotBooking.Api.Brokers.Loggings;
+using NajotBooking.Api.Brokers.Storages;
+using NajotBooking.Api.Models.Users;
+
+namespace NajotBooking.Api.Services.Foundations.Users
+{
+    public partial class UserService : IUserService
+    {
+        private readonly IStorageBroker storageBroker;
+        private readonly ILoggingBroker loggingBroker;
+
+        public UserService(
+            IStorageBroker storageBroker,
+            ILoggingBroker loggingBroker)
+        {
+            this.storageBroker = storageBroker;
+            this.loggingBroker = loggingBroker;
+        }
+
+        public UserService(IStorageBroker storageBroker)
+        {
+            this.storageBroker = storageBroker;
+            this.loggingBroker = loggingBroker;
+        }
+
+        public ValueTask<User> AddUserAsync(User user) =>
+            storageBroker.InsertUserAsync(user);
+
+        public ValueTask<User> RetrieveUserByIdAsync(Guid userId) =>
+            storageBroker.SelectUserByIdAsync(userId);
+
+        public IQueryable<User> RetrieveAllUsers() =>
+            storageBroker.SelectAllUsers();
+
+        public ValueTask<User> ModifyUserAsync(User user) =>
+            storageBroker.UpdateUserAsync(user);
+
+        public ValueTask<User> RemoveUser(User user) =>
+            storageBroker.DeleteUserAsync(user);
+
+    }
+}
