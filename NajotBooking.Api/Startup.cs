@@ -49,7 +49,7 @@ namespace NajotBooking.Api
 
                 app.UseSwaggerUI(config => config.SwaggerEndpoint(
                     url: "/swagger/v1/swagger.json",
-                    name: "Coworking_Booking.Api v1"));
+                    name: "NajotBooking.Api v1"));
             }
 
             app.UseHttpsRedirection();
