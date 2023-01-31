@@ -6,14 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Services\Foundations\Users\UserService.Validitions.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Services\Foundations\Users\UserService.Validitions.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="EFxceptions" Version="0.4.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.1">
