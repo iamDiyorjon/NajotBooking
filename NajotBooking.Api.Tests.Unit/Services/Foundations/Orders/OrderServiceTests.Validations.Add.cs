@@ -44,5 +44,67 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(-100)]
+        public async Task ShouldThrowValidationExceptionOnAddIfOrderIsInvalidAndLogItAsync(
+            int invalidNumber)
+        {
+            // given
+            var invalidOrder = new Order
+            {
+                Duration = invalidNumber
+            };
+
+            var invalidOrderException = new InvalidOrderException();
+
+            invalidOrderException.AddData(
+                key: nameof(Order.Id),
+                values: "Id is required");
+
+            invalidOrderException.AddData(
+                key: nameof(Order.SeatId),
+                values: "Id is required");
+
+            invalidOrderException.AddData(
+                key: nameof(Order.UserId),
+                values: "Id is required");
+
+            invalidOrderException.AddData(
+               key: nameof(Order.StartDate),
+               values: "Value is required");
+
+            invalidOrderException.AddData(
+                key: nameof(Order.EndDate),
+                values: "Value is required");
+
+            invalidOrderException.AddData(
+                key: nameof(Order.Duration),
+                values: "Value is required");
+
+            OrderValidationException expectedOrderValidationException =
+                new OrderValidationException(invalidOrderException);
+
+            // when
+            ValueTask<Order> addOrderTask =
+                this.orderService.AddOrderAsync(invalidOrder);
+
+            OrderValidationException actualOrderValidationException =
+                await Assert.ThrowsAsync<OrderValidationException>(addOrderTask.AsTask);
+
+            // then
+            actualOrderValidationException.Should().BeEquivalentTo(expectedOrderValidationException);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExpressionAs(
+                    expectedOrderValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertOrderAsync(It.IsAny<Order>()), Times.Never);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
