@@ -1,8 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿// ---------------------------------------------------------------
+// Copyright (c) Coalition of the THE STANDART SHARPISTS
+// Free To Use to Book Places in Coworking Zones
+// ---------------------------------------------------------------
+
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NajotBooking.Api.Models.Orders;
-using NajotBooking.Api.Services.Foundations.Orders.Exceptions;
+using NajotBooking.Api.Models.Orders.Exceptions;
 using Xunit;
 
 namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders

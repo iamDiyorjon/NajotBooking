@@ -5,12 +5,11 @@
 
 using Xeptions;
 
-namespace NajotBooking.Api.Services.Foundations.Orders.Exceptions
+namespace NajotBooking.Api.Models.Orders.Exceptions
 {
-    public class OrderValidationException : Xeption
+    public class NullOrderException : Xeption
     {
-        public OrderValidationException(Xeption innerException)
-            : base(message: "Order error occured, fix the errors and try again.", innerException)
+        public NullOrderException() : base(message: "Order is null.")
         { }
     }
 }
