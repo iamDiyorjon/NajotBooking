@@ -23,7 +23,7 @@ namespace NajotBooking.Api.Services.Foundations.Orders
         public ValueTask<Order> AddOrderAsync(Order order) =>
         TryCatch(async () =>
         {
-            ValidateOrderNotNull(order);
+            ValidateOrder(order);
 
             return await this.storageBroker.InsertOrderAsync(order);
         });

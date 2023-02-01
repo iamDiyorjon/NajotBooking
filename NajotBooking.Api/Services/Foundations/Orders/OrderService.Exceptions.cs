@@ -24,6 +24,10 @@ namespace NajotBooking.Api.Services.Foundations.Orders
             {
                 throw CreateAndLogValidationException(nullOrderException);
             }
+            catch (InvalidOrderException invalidOrderException)
+            {
+                throw CreateAndLogValidationException(invalidOrderException);
+            }
         }
 
         private OrderValidationException CreateAndLogValidationException(Xeption exception)
