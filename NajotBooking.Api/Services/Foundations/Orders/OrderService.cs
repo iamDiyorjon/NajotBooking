@@ -10,7 +10,7 @@ using NajotBooking.Api.Models.Orders;
 
 namespace NajotBooking.Api.Services.Foundations.Orders
 {
-    public class OrderService : IOrderService
+    public partial class OrderService : IOrderService
     {
         private readonly IStorageBroker storageBroker;
         private readonly ILoggingBroker loggingBroker;
@@ -20,8 +20,12 @@ namespace NajotBooking.Api.Services.Foundations.Orders
             this.storageBroker = storageBroker;
             this.loggingBroker = loggingBroker;
         }
+        public ValueTask<Order> AddOrderAsync(Order order) =>
+        TryCatch(async () =>
+        {
+            ValidateOrderNotNull(order);
 
-        public async ValueTask<Order> AddOrderAsync(Order order) =>
-            await this.storageBroker.InsertOrderAsync(order);
+            return await this.storageBroker.InsertOrderAsync(order);
+        });
     }
 }
