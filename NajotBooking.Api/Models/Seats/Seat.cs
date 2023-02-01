@@ -13,8 +13,7 @@ namespace NajotBooking.Api.Models.Seats
         public int Number { get; set; }
         public Branch Branch { get; set; }
         public int Floor { get; set; }
-        public DateTimeOffset StartingTime { get; set; }
-        public DateTimeOffset EndingTime { get; set; }
+        public decimal Price { get; set; }
         public DateTimeOffset CraetedDate { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
     }
