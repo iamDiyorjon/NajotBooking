@@ -5,6 +5,8 @@
 
 using System;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
+using Microsoft.Data.SqlClient;
 using Moq;
 using NajotBooking.Api.Brokers.Loggings;
 using NajotBooking.Api.Brokers.Storages;
@@ -33,6 +35,9 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
 
         private Expression<Func<Exception, bool>> SameExpressionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
+
+        private static SqlException CreateSqlException() =>
+            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
