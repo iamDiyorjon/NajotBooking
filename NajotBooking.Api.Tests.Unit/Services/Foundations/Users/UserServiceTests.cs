@@ -1,10 +1,14 @@
-﻿using Moq;
+﻿using System;
+using System.Linq.Expressions;
+using System.Runtime.Serialization;
+using Microsoft.Data.SqlClient;
+using Moq;
 using NajotBooking.Api.Brokers.Loggings;
 using NajotBooking.Api.Brokers.Storages;
 using NajotBooking.Api.Models.Users;
 using NajotBooking.Api.Services.Foundations.Users;
-using System;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
 {
@@ -29,6 +33,12 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
 
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+
+        private static SqlException GetSqlException() =>
+            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
+
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
 
         private static Filler<User> CreateUserFiller(DateTimeOffset dates)
         {
