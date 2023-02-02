@@ -1,9 +1,9 @@
-﻿using NajotBooking.Api.Brokers.Loggings;
-using NajotBooking.Api.Brokers.Storages;
-using NajotBooking.Api.Models.Users;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using NajotBooking.Api.Brokers.Loggings;
+using NajotBooking.Api.Brokers.Storages;
+using NajotBooking.Api.Models.Users;
 
 namespace NajotBooking.Api.Services.Foundations.Users
 {
@@ -23,6 +23,7 @@ namespace NajotBooking.Api.Services.Foundations.Users
         public ValueTask<User> AddUserAsync(User user) =>
              TryCatch(async () =>
              {
+                 ValidateUser(user);
                  return await this.storageBroker.InsertUserAsync(user);
              });
 

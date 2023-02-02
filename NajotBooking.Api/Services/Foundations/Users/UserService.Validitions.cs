@@ -3,9 +3,9 @@
 // Free To Use to Book Places in Coworking Zones
 // ---------------------------------------------------------------
 
+using System;
 using NajotBooking.Api.Models.Users;
 using NajotBooking.Api.Models.Users.Exceptions;
-using System;
 
 namespace NajotBooking.Api.Services.Foundations.Users
 {
@@ -15,10 +15,12 @@ namespace NajotBooking.Api.Services.Foundations.Users
         {
             ValidateUserNotNull(user);
 
-            //Validate(
-            //    (Rule: IsInvalid(user.Id), Parameter: nameof(User.Id)),
-            //    (Rule: IsInvalid(user.FullName), Parameter: nameof(User.FullName)),
-            //    (Rule: IsInvalid(user.PhoneNumber), Parameter: nameof(User.PhoneNumber)),
+            Validate(
+                (Rule: IsInvalid(user.Id), Parameter: nameof(User.Id)),
+                (Rule: IsInvalid(user.Email), Parameter: nameof(User.Email)),
+                (Rule: IsInvalid(user.LastName), Parameter: nameof(User.LastName)),
+                (Rule: IsInvalid(user.FirstName), Parameter: nameof(User.FirstName)),
+                (Rule: IsInvalid(user.PhoneNumber), Parameter: nameof(User.PhoneNumber)));
 
         }
 
@@ -32,17 +34,6 @@ namespace NajotBooking.Api.Services.Foundations.Users
                 throw new NotFoundUserException(userId);
             }
         }
-
-        //private void ValidateUserId(Guid userId) =>
-        //    Validate((Rule: IsInvalid(userId), Parameter: nameof(User.Id)));
-
-        //private void ValidateStorageUser(User maybeUser, Guid userId)
-        //{
-        //    if (maybeUser is null)
-        //    {
-        //        throw new NotFoundUserException(userId);
-        //    }
-        //}
 
         private static dynamic IsInvalid(Guid id) => new
         {
