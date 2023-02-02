@@ -3,6 +3,7 @@
 // Free To Use to Book Places in Coworking Zones
 // ---------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
@@ -50,6 +51,12 @@ namespace NajotBooking.Api.Services.Foundations.Orders
 
                 throw CreateAndDependencyValidationException(lockedOrderException);
             }
+            catch (Exception exception)
+            {
+                var failedOrderServiceException = new FailedOrderServiceException(exception);
+
+                throw CreateAndLogServiceException(failedOrderServiceException);
+            }
         }
 
         private OrderValidationException CreateAndLogValidationException(Xeption exception)
@@ -76,6 +83,14 @@ namespace NajotBooking.Api.Services.Foundations.Orders
             this.loggingBroker.LogError(orderDependencyValidationException);
 
             return orderDependencyValidationException;
+        }
+
+        private OrderServiceException CreateAndLogServiceException(Xeption exception)
+        {
+            var orderServiceException = new OrderServiceException(exception);
+            this.loggingBroker.LogError(orderServiceException);
+
+            return orderServiceException;
         }
     }
 }
