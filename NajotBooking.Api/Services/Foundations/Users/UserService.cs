@@ -20,14 +20,11 @@ namespace NajotBooking.Api.Services.Foundations.Users
             this.loggingBroker = loggingBroker;
         }
 
-        public UserService(IStorageBroker storageBroker)
-        {
-            this.storageBroker = storageBroker;
-            this.loggingBroker = loggingBroker;
-        }
-
         public ValueTask<User> AddUserAsync(User user) =>
-            throw new System.NotImplementedException();
+             TryCatch(async () =>
+             {
+                 return await this.storageBroker.InsertUserAsync(user);
+             });
 
         public ValueTask<User> RetrieveUserByIdAsync(Guid userId) =>
             storageBroker.SelectUserByIdAsync(userId);
@@ -40,6 +37,5 @@ namespace NajotBooking.Api.Services.Foundations.Users
 
         public ValueTask<User> RemoveUser(User user) =>
             storageBroker.DeleteUserAsync(user);
-
     }
 }
