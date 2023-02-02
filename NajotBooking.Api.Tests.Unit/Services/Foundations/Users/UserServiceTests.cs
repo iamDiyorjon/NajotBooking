@@ -28,8 +28,14 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
                 loggingBroker: this.loggingBrokerMock.Object);
         }
 
+        private static int GetRandomNumber() =>
+           new IntRange(min: 1, max: 10).GetValue();
+
         private static User CreateRandomUser() =>
             CreateUserFiller(GetRandomDateTimeOffset()).Create();
+
+        private static string GetRandomMessage() =>
+           new MnemonicString(wordCount: GetRandomNumber()).GetValue();
 
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
