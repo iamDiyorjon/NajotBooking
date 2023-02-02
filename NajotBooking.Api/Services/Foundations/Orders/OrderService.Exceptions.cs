@@ -4,6 +4,7 @@
 // ---------------------------------------------------------------
 
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 using NajotBooking.Api.Models.Orders;
 using NajotBooking.Api.Models.Orders.Exceptions;
 using Xeptions;
@@ -28,6 +29,12 @@ namespace NajotBooking.Api.Services.Foundations.Orders
             {
                 throw CreateAndLogValidationException(invalidOrderException);
             }
+            catch (SqlException sqlException)
+            {
+                var failedOrderStorageException = new FailedOrderStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedOrderStorageException);
+            }
         }
 
         private OrderValidationException CreateAndLogValidationException(Xeption exception)
@@ -36,6 +43,14 @@ namespace NajotBooking.Api.Services.Foundations.Orders
             this.loggingBroker.LogError(orderValidationException);
 
             return orderValidationException;
+        }
+
+        private OrderDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
+        {
+            var orderDependencyException = new OrderDependencyException(exception);
+            this.loggingBroker.LogCritical(orderDependencyException);
+
+            return orderDependencyException;
         }
     }
 }
