@@ -3,6 +3,7 @@
 // Free To Use to Book Places in Coworking Zones
 // ---------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using FluentAssertions;
@@ -130,6 +131,44 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExpressionAs(
                     expectedOrderDependencyValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnAddIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            Order someOrder = CreateRandomOrder();
+            var serviceException = new Exception();
+
+            var failedOrderServiceException =
+                new FailedOrderServiceException(serviceException);
+
+            var expectedOrderServiceException =
+                new OrderServiceException(failedOrderServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.InsertOrderAsync(It.IsAny<Order>()))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<Order> addOrderTask =
+                this.orderService.AddOrderAsync(someOrder);
+
+            OrderServiceException actualOrderServiceException =
+                await Assert.ThrowsAsync<OrderServiceException>(addOrderTask.AsTask);
+
+            // then
+            actualOrderServiceException.Should().BeEquivalentTo(expectedOrderServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertOrderAsync(It.IsAny<Order>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExpressionAs(
+                    expectedOrderServiceException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
