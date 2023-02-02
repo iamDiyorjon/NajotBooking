@@ -2,6 +2,7 @@
 using EFxceptions.Models.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using NajotBooking.Api.Models.Users;
 using NajotBooking.Api.Models.Users.Exceptions;
@@ -88,6 +89,50 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedUserDependencyValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyExceptionOnAddIfDatabaseUpdateErrorOccursAndLogItAsync()
+        {
+            //given
+            User someUser = CreateRandomUser();
+
+            var databaseUpdateException =
+                new DbUpdateException();
+
+            var failedUserStorageException =
+                new FailedUserStorageException(databaseUpdateException);
+
+            var expectedUserDependencyException =
+                new UserDependencyException(failedUserStorageException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.InsertUserAsync(someUser))
+                    .Throws(databaseUpdateException);
+
+            //when
+            ValueTask<User> addUserTask =
+                this.userService.AddUserAsync(someUser);
+
+            UserDependencyException actualUserDependencyException =
+                await Assert.ThrowsAsync<UserDependencyException>(
+                    addUserTask.AsTask);
+
+            //then
+            actualUserDependencyException.Should().BeEquivalentTo(
+                expectedUserDependencyException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertUserAsync(It.IsAny<User>()),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserDependencyException))),
                         Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
