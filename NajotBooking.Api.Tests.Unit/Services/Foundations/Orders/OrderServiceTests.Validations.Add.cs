@@ -3,6 +3,7 @@
 // Free To Use to Book Places in Coworking Zones
 // ---------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
@@ -84,6 +85,45 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
                 values: "Value is required");
 
             OrderValidationException expectedOrderValidationException =
+                new OrderValidationException(invalidOrderException);
+
+            // when
+            ValueTask<Order> addOrderTask =
+                this.orderService.AddOrderAsync(invalidOrder);
+
+            OrderValidationException actualOrderValidationException =
+                await Assert.ThrowsAsync<OrderValidationException>(addOrderTask.AsTask);
+
+            // then
+            actualOrderValidationException.Should().BeEquivalentTo(expectedOrderValidationException);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExpressionAs(
+                    expectedOrderValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertOrderAsync(It.IsAny<Order>()), Times.Never);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnAddIfStartDateIsNotLessThanEndDateAndLogItAsync()
+        {
+            // bu kerak emas manimcha
+            // given
+            Order randomOrder = CreateRandomOrder();
+            DateTimeOffset beforeRandomDateTime = GetBeforeRandomDateTime(randomOrder.StartDate);
+            Order invalidOrder = randomOrder;
+            randomOrder.EndDate = beforeRandomDateTime;
+            var invalidOrderException = new InvalidOrderException();
+
+            invalidOrderException.AddData(
+                key: nameof(Order.StartDate),
+                values: $"Date is not less than {nameof(Order.EndDate)}");
+
+            var expectedOrderValidationException =
                 new OrderValidationException(invalidOrderException);
 
             // when
