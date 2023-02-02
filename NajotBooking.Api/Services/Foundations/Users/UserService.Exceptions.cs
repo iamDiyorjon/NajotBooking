@@ -42,7 +42,10 @@ namespace NajotBooking.Api.Services.Foundations.Users
             }
             catch (DuplicateKeyException duplicateKeyException)
             {
-                throw duplicateKeyException;
+                var alreadyExistsUserException =
+                    new AlreadyExistsUserException(duplicateKeyException);
+
+                throw CreateAndDependencyValidationException(alreadyExistsUserException);
             }
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
