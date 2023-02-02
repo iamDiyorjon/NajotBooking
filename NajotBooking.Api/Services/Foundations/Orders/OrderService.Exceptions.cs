@@ -4,6 +4,7 @@
 // ---------------------------------------------------------------
 
 using System.Threading.Tasks;
+using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using NajotBooking.Api.Models.Orders;
 using NajotBooking.Api.Models.Orders.Exceptions;
@@ -35,6 +36,13 @@ namespace NajotBooking.Api.Services.Foundations.Orders
 
                 throw CreateAndLogCriticalDependencyException(failedOrderStorageException);
             }
+            catch (DuplicateKeyException duplicateKeyException)
+            {
+                var alreadyExistsOrderException =
+                    new AlreadyExistsOrderException(duplicateKeyException);
+
+                throw CreateAndDependencyValidationException(alreadyExistsOrderException);
+            }
         }
 
         private OrderValidationException CreateAndLogValidationException(Xeption exception)
@@ -51,6 +59,16 @@ namespace NajotBooking.Api.Services.Foundations.Orders
             this.loggingBroker.LogCritical(orderDependencyException);
 
             return orderDependencyException;
+        }
+
+        private OrderDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
+        {
+            var orderDependencyValidationException =
+                new OrderDependencyValidationException(exception);
+
+            this.loggingBroker.LogError(orderDependencyValidationException);
+
+            return orderDependencyValidationException;
         }
     }
 }
