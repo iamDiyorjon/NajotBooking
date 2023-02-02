@@ -4,6 +4,7 @@
 // ---------------------------------------------------------------
 
 using System.Threading.Tasks;
+using EFxceptions.Models.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
@@ -48,6 +49,47 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExpressionAs(
                     expectedOrderDependencyException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnAddIfDuplicateKeyErrorOccursAndLogItAsync()
+        {
+            // given
+            Order someOrder = CreateRandomOrder();
+            string someMessage = GetRandomString();
+            var duplicateKeyException = new DuplicateKeyException(someMessage);
+
+            var alreadyExistsOrderException =
+                new AlreadyExistsOrderException(duplicateKeyException);
+
+            var expectedOrderDependencyValidationException =
+                new OrderDependencyValidationException(
+                    alreadyExistsOrderException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.InsertOrderAsync(It.IsAny<Order>()))
+                    .ThrowsAsync(duplicateKeyException);
+
+            // when
+            ValueTask<Order> addOrderTask =
+                this.orderService.AddOrderAsync(someOrder);
+
+            OrderDependencyValidationException actualOrderDependencyValidationException =
+                await Assert.ThrowsAsync<OrderDependencyValidationException>(addOrderTask.AsTask);
+
+            // then
+            actualOrderDependencyValidationException.Should()
+                .BeEquivalentTo(expectedOrderDependencyValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertOrderAsync(It.IsAny<Order>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExpressionAs(
+                    expectedOrderDependencyValidationException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
