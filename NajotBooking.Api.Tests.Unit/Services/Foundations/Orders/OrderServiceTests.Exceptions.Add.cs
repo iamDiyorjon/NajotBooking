@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using NajotBooking.Api.Models.Orders;
 using NajotBooking.Api.Models.Orders.Exceptions;
@@ -72,6 +73,45 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
             this.storageBrokerMock.Setup(broker =>
                 broker.InsertOrderAsync(It.IsAny<Order>()))
                     .ThrowsAsync(duplicateKeyException);
+
+            // when
+            ValueTask<Order> addOrderTask =
+                this.orderService.AddOrderAsync(someOrder);
+
+            OrderDependencyValidationException actualOrderDependencyValidationException =
+                await Assert.ThrowsAsync<OrderDependencyValidationException>(addOrderTask.AsTask);
+
+            // then
+            actualOrderDependencyValidationException.Should()
+                .BeEquivalentTo(expectedOrderDependencyValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertOrderAsync(It.IsAny<Order>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExpressionAs(
+                    expectedOrderDependencyValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnAddIfDbConcurrencyErrorOccursAndLogItAsync()
+        {
+            // given
+            Order someOrder = CreateRandomOrder();
+            var dbUpdateConcurrencyException = new DbUpdateConcurrencyException();
+
+            var lockedOrderException =
+                new LockedOrderException(dbUpdateConcurrencyException);
+
+            var expectedOrderDependencyValidationException =
+                new OrderDependencyValidationException(lockedOrderException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.InsertOrderAsync(It.IsAny<Order>()))
+                    .ThrowsAsync(dbUpdateConcurrencyException);
 
             // when
             ValueTask<Order> addOrderTask =
