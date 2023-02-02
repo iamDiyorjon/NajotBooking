@@ -6,6 +6,7 @@
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using NajotBooking.Api.Models.Orders;
 using NajotBooking.Api.Models.Orders.Exceptions;
 using Xeptions;
@@ -42,6 +43,12 @@ namespace NajotBooking.Api.Services.Foundations.Orders
                     new AlreadyExistsOrderException(duplicateKeyException);
 
                 throw CreateAndDependencyValidationException(alreadyExistsOrderException);
+            }
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedOrderException = new LockedOrderException(dbUpdateConcurrencyException);
+
+                throw CreateAndDependencyValidationException(lockedOrderException);
             }
         }
 
