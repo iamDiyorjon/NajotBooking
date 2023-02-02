@@ -35,7 +35,10 @@ namespace NajotBooking.Api.Services.Foundations.Users
             }
             catch (SqlException sqlException)
             {
-                throw sqlException;
+                var failedUserStorageException =
+                    new FailedUserStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedUserStorageException);
             }
             catch (DuplicateKeyException duplicateKeyException)
             {
