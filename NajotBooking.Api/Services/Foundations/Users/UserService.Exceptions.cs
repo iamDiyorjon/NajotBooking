@@ -67,13 +67,13 @@ namespace NajotBooking.Api.Services.Foundations.Users
 
                 throw CreateAndLogDependencyValidationException(invalidUserReferenceException);
             }
-            catch (Exception serviceException)
-            {
-                var failedUserServiceException =
-                    new FailedUserServiceException(serviceException);
+            //catch (Exception serviceException)
+            //{
+            //    var failedUserServiceException =
+            //        new FailedUserServiceException(serviceException);
 
-                throw CreateAndLogServiceException(failedUserServiceException);
-            }
+            //    throw CreateAndLogServiceException(failedUserServiceException);
+            //}
         }
 
         private IQueryable<User> TryCatch(ReturningUsersFunction returningUsersFunction)
