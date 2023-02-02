@@ -21,7 +21,14 @@ namespace NajotBooking.Api.Services.Foundations.Orders
                 (Rule: IsInvalid(order.UserId), Parameter: nameof(Order.UserId)),
                 (Rule: IsInvalid(order.StartDate), Parameter: nameof(Order.StartDate)),
                 (Rule: IsInvalid(order.EndDate), Parameter: nameof(Order.EndDate)),
-                (Rule: IsInvalid(order.Duration), Parameter: nameof(Order.Duration)));
+                (Rule: IsInvalid(order.Duration), Parameter: nameof(Order.Duration)),
+                (Rule: IsNotLessThan(
+                    startDate: order.StartDate,
+                    endDate: order.EndDate,
+                    dateName: nameof(Order.EndDate)),
+
+                    Parameter: nameof(Order.StartDate))
+                );
         }
 
         private static void ValidateOrderNotNull(Order order)
@@ -66,5 +73,14 @@ namespace NajotBooking.Api.Services.Foundations.Orders
             Condition = date == default,
             Message = "Value is required"
         };
+
+        private static dynamic IsNotLessThan(
+           DateTimeOffset startDate,
+           DateTimeOffset endDate,
+           string dateName) => new
+           {
+               Condition = startDate >= endDate,
+               Message = $"Date is not less than {dateName}"
+           };
     }
 }
