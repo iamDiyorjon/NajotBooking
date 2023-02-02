@@ -25,10 +25,10 @@ namespace NajotBooking.Api.Services.Foundations.Users
             {
                 throw CreateAndLogValidationException(nullUserException);
             }
-            //catch (InvalidUserException invalidUserException)
-            //{
-            //    throw CreateAndLogValidationException(invalidUserException);
-            //}
+            catch (InvalidUserException invalidUserException)
+            {
+                throw CreateAndLogValidationException(invalidUserException);
+            }
             catch (NotFoundUserException notFoundUserException)
             {
                 throw CreateAndLogValidationException(notFoundUserException);

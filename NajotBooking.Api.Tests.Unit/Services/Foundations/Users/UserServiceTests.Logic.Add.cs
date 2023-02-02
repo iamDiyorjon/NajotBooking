@@ -1,8 +1,8 @@
-﻿using FluentAssertions;
+﻿using System.Threading.Tasks;
+using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
 using NajotBooking.Api.Models.Users;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
