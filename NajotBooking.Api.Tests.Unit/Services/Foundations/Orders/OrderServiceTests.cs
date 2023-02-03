@@ -44,9 +44,16 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
 
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+
         private static DateTimeOffset GetBeforeRandomDateTime(DateTimeOffset dates) =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch, latestDate: dates.UtcDateTime).GetValue();
 
+        private static DateTimeOffset GetAfterRandomDateTime(DateTimeOffset dates) =>
+            new DateTimeRange(earliestDate: dates.UtcDateTime,
+                latestDate: dates.UtcDateTime.AddHours(GetRandomNumber())).GetValue();
+
+        private static int GetRandomNumber() =>
+            new IntRange(min: 1, max: 10000).GetValue();
 
         private static Order CreateRandomOrder() =>
             CreateOrderFiller().Create();

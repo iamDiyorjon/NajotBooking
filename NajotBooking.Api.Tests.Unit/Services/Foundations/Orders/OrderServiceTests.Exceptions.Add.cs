@@ -23,6 +23,7 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
         {
             // given
             Order someOrder = CreateRandomOrder();
+            someOrder.EndDate = GetAfterRandomDateTime(someOrder.StartDate);
             SqlException sqlException = CreateSqlException();
 
             var failedOrderStorageException =

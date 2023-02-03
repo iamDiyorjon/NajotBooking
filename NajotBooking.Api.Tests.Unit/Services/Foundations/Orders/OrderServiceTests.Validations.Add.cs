@@ -111,7 +111,6 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
         [Fact]
         public async Task ShouldThrowValidationExceptionOnAddIfStartDateIsNotLessThanEndDateAndLogItAsync()
         {
-            // bu kerak emas manimcha
             // given
             Order randomOrder = CreateRandomOrder();
             DateTimeOffset beforeRandomDateTime = GetBeforeRandomDateTime(randomOrder.StartDate);
