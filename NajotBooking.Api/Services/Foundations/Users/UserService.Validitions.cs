@@ -3,6 +3,10 @@
 // Free To Use to Book Places in Coworking Zones
 // ---------------------------------------------------------------
 
+using System;
+using NajotBooking.Api.Models.Users;
+using NajotBooking.Api.Models.Users.Exceptions;
+
 namespace NajotBooking.Api.Services.Foundations.Users
 {
     public partial class UserService
@@ -13,20 +17,11 @@ namespace NajotBooking.Api.Services.Foundations.Users
 
             Validate(
                 (Rule: IsInvalid(user.Id), Parameter: nameof(User.Id)),
-                (Rule: IsInvalid(user.FullName), Parameter: nameof(User.FullName)),
-                (Rule: IsInvalid(user.PhoneNumber), Parameter: nameof(User.PhoneNumber)),
+                (Rule: IsInvalid(user.Email), Parameter: nameof(User.Email)),
+                (Rule: IsInvalid(user.LastName), Parameter: nameof(User.LastName)),
+                (Rule: IsInvalid(user.FirstName), Parameter: nameof(User.FirstName)),
+                (Rule: IsInvalid(user.PhoneNumber), Parameter: nameof(User.PhoneNumber)));
 
-        }
-
-        private void ValidateUserId(Guid userId) =>
-            Validate((Rule: IsInvalid(userId), Parameter: nameof(User.Id)));
-
-        private void ValidateStorageUser(User maybeUser, Guid userId)
-        {
-            if (maybeUser is null)
-            {
-                throw new NotFoundUserException(userId);
-            }
         }
 
         private void ValidateUserId(Guid userId) =>
