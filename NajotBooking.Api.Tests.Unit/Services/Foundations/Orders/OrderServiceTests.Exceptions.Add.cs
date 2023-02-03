@@ -62,6 +62,7 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
         {
             // given
             Order someOrder = CreateRandomOrder();
+            someOrder.EndDate = GetAfterRandomDateTime(someOrder.StartDate);
             string someMessage = GetRandomString();
             var duplicateKeyException = new DuplicateKeyException(someMessage);
 
