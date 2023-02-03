@@ -57,6 +57,7 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
             {
                 Duration = invalidNumber
             };
+            //    invalidOrder.EndDate = GetAfterRandomDateTime(invalidOrder.StartDate);
 
             var invalidOrderException = new InvalidOrderException();
 
@@ -83,6 +84,10 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
             invalidOrderException.AddData(
                 key: nameof(Order.Duration),
                 values: "Value is required");
+
+            invalidOrderException.AddData(
+                key: nameof(Order.StartDate) + nameof(Order.EndDate),
+                values: $"Date is not less than {nameof(Order.EndDate)}");
 
             OrderValidationException expectedOrderValidationException =
                 new OrderValidationException(invalidOrderException);

@@ -27,7 +27,7 @@ namespace NajotBooking.Api.Services.Foundations.Orders
                     endDate: order.EndDate,
                     dateName: nameof(Order.EndDate)),
 
-                    Parameter: nameof(Order.StartDate))
+                    Parameter: nameof(Order.StartDate) + nameof(Order.EndDate))
                 );
         }
 
