@@ -4,8 +4,10 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
+using FluentAssertions.Equivalency.Steps;
 using Microsoft.Data.SqlClient;
 using Moq;
 using NajotBooking.Api.Brokers.Loggings;
@@ -67,6 +69,13 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
                 .OnType<DateTimeOffset>().Use(dates);
 
             return filler;
+        }
+
+        private static IQueryable<Order> CreateRandomOrders()
+        {
+            return CreateOrderFiller()
+                .Create(count: GetRandomNumber())
+                    .AsQueryable();
         }
     }
 }
