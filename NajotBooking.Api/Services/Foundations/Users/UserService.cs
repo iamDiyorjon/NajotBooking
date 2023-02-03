@@ -1,4 +1,9 @@
-﻿using System;
+﻿// ---------------------------------------------------------------
+// Copyright (c) Coalition of the THE STANDART SHARPISTS
+// Free To Use to Book Places in Coworking Zones
+// ---------------------------------------------------------------
+
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using NajotBooking.Api.Brokers.Loggings;
@@ -20,14 +25,12 @@ namespace NajotBooking.Api.Services.Foundations.Users
             this.loggingBroker = loggingBroker;
         }
 
-        public UserService(IStorageBroker storageBroker)
-        {
-            this.storageBroker = storageBroker;
-            this.loggingBroker = loggingBroker;
-        }
-
         public ValueTask<User> AddUserAsync(User user) =>
-            storageBroker.InsertUserAsync(user);
+             TryCatch(async () =>
+             {
+                 ValidateUser(user);
+                 return await this.storageBroker.InsertUserAsync(user);
+             });
 
         public ValueTask<User> RetrieveUserByIdAsync(Guid userId) =>
             storageBroker.SelectUserByIdAsync(userId);
@@ -40,6 +43,5 @@ namespace NajotBooking.Api.Services.Foundations.Users
 
         public ValueTask<User> RemoveUser(User user) =>
             storageBroker.DeleteUserAsync(user);
-
     }
 }

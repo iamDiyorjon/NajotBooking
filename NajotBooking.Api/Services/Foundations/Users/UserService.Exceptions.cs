@@ -1,4 +1,9 @@
-﻿using System;
+﻿// ---------------------------------------------------------------
+// Copyright (c) Coalition of the THE STANDART SHARPISTS
+// Free To Use to Book Places in Coworking Zones
+// ---------------------------------------------------------------
+
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
@@ -53,6 +58,20 @@ namespace NajotBooking.Api.Services.Foundations.Users
 
                 throw CreateAndDependencyValidationException(lockedUserException);
             }
+            catch (DbUpdateException databaseUpdateException)
+            {
+                var failedUserStorageException =
+                    new FailedUserStorageException(databaseUpdateException);
+
+                throw CreateAndLogDependencyException(failedUserStorageException);
+            }
+            catch (ForeignKeyConstraintConflictException foreignKeyConstraintConflictException)
+            {
+                var invalidUserReferenceException =
+                    new InvalidUserReferenceException(foreignKeyConstraintConflictException);
+
+                throw CreateAndLogDependencyValidationException(invalidUserReferenceException);
+            }
             catch (Exception serviceException)
             {
                 var failedUserServiceException =
@@ -82,6 +101,27 @@ namespace NajotBooking.Api.Services.Foundations.Users
 
                 throw CreateAndLogServiceException(failedUserServiceException);
             }
+        }
+
+        private UserDependencyValidationException CreateAndLogDependencyValidationException(
+            Xeption exception)
+        {
+            var userDependencyValidationException =
+                new UserDependencyValidationException(exception);
+
+            this.loggingBroker.LogError(userDependencyValidationException);
+
+            return userDependencyValidationException;
+        }
+
+        private UserDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var userDependencyException =
+                new UserDependencyException(exception);
+
+            this.loggingBroker.LogError(userDependencyException);
+
+            return userDependencyException;
         }
 
         private UserValidationException CreateAndLogValidationException(Xeption exception)
