@@ -20,15 +20,15 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
             User storageUser = inputUser.DeepClone();
             User updatedUser = inputUser;
             User exceptedUser = updatedUser.DeepClone();
-            Guid Id = inputUser.Id;
+            Guid inputUserId = inputUser.Id;
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectUserByIdAsync(Id))
-                    .ReturnsAsync(storageUser);
-
-            this.storageBrokerMock.Setup(broker =>
-                broker.SelectUserByIdAsync(Id))
+                broker.UpdateUserAsync(inputUser))
                     .ReturnsAsync(updatedUser);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectUserByIdAsync(inputUserId))
+                    .ReturnsAsync(storageUser);
 
             //when
             User actualUser =
@@ -41,7 +41,7 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
                 broker.UpdateUserAsync(inputUser), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectUserByIdAsync(Id), Times.Once);
+                broker.SelectUserByIdAsync(inputUserId), Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
