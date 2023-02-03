@@ -19,6 +19,7 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
         {
             // given 
             Order randomOrder = CreateRandomOrder();
+            randomOrder.EndDate = GetAfterRandomDateTime(randomOrder.StartDate);
             Order inputOrder = randomOrder;
             Order persistOrder = inputOrder;
             Order expectedOrder = persistOrder.DeepClone();
