@@ -11,7 +11,7 @@ namespace NajotBooking.Api.Models.Orders.Exceptions
     public class OrderServiceException : Xeption
     {
         public OrderServiceException(Exception innerException)
-            : base(message: "Profile service occurred, contact support.", innerException)
+            : base(message: "Order service occurred, contact support.", innerException)
         { }
     }
 }

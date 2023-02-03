@@ -11,7 +11,7 @@ namespace NajotBooking.Api.Models.Orders.Exceptions
     public class FailedOrderServiceException : Xeption
     {
         public FailedOrderServiceException(Exception innerException)
-            : base(message: "Failed profile service occurred, please contact support", innerException)
+            : base(message: "Failed order service occurred, please contact support", innerException)
         { }
     }
 }
