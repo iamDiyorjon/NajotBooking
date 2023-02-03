@@ -144,6 +144,7 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
         {
             // given
             Order someOrder = CreateRandomOrder();
+            someOrder.EndDate = GetAfterRandomDateTime(someOrder.StartDate);
             var serviceException = new Exception();
 
             var failedOrderServiceException =
