@@ -1,4 +1,9 @@
-﻿using System;
+﻿// ---------------------------------------------------------------
+// Copyright (c) Coalition of the THE STANDART SHARPISTS
+// Free To Use to Book Places in Coworking Zones
+// ---------------------------------------------------------------
+
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;

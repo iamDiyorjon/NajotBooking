@@ -1,4 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿// ---------------------------------------------------------------
+// Copyright (c) Coalition Of The THE STANDART SHARPISTS
+// Free To Use To Book Places In Coworking Zones
+// ---------------------------------------------------------------
+
+using System.Threading.Tasks;
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
