@@ -182,7 +182,7 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedUserServiceException))), Times.Never);
+                    expectedUserServiceException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
