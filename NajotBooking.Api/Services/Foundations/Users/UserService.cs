@@ -42,6 +42,12 @@ namespace NajotBooking.Api.Services.Foundations.Users
             TryCatch(async () =>
             {
                 ValidateUser(user);
+
+                var maybeUser =
+                    await this.storageBroker.SelectUserByIdAsync(user.Id);
+
+                ValidateStorageUser(maybeUser, user.Id);
+
                 return await this.storageBroker.UpdateUserAsync(user);
             });
 

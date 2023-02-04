@@ -46,7 +46,7 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
                 broker.UpdateUserAsync(inputUser), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectUserByIdAsync(inputUserId), Times.Never);
+                broker.SelectUserByIdAsync(inputUserId), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
