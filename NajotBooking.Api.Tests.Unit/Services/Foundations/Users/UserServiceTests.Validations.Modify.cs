@@ -47,7 +47,6 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
-
         [Fact]
         public async Task ShouldThrowValidationExceptionOnModifyIfUserIsInvalidAndLogItAsync()
         {
