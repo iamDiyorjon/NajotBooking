@@ -144,5 +144,48 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnModifyIfDatabaseUpdateErrorOccursAndLogItAsync()
+        {
+            // given
+            int minuteInPast = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            User randomUser = CreateRandomUser(randomDateTime);
+            User someUser = randomUser;
+            var serviceException = new Exception();
+
+            var failedUserException =
+                new FailedUserServiceException(serviceException);
+
+            var expectedUserServiceException =
+                new UserServiceException(failedUserException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectUserByIdAsync(someUser.Id))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<User> modifyUserTask =
+                this.userService.ModifyUserAsync(someUser);
+
+            UserServiceException actualUserServiceException =
+                await Assert.ThrowsAsync<UserServiceException>(
+                    modifyUserTask.AsTask);
+
+            // then
+            actualUserServiceException.Should().BeEquivalentTo(
+                expectedUserServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectUserByIdAsync(someUser.Id), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserServiceException))), Times.Never);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
