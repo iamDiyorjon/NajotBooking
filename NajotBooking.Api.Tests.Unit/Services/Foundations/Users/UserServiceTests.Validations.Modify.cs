@@ -102,7 +102,7 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
                     expectedUserValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.UpdateUserAsync(It.IsAny<User>()), Times.Once);
+                broker.UpdateUserAsync(It.IsAny<User>()), Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
