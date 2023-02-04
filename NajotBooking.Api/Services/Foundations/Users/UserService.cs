@@ -39,7 +39,11 @@ namespace NajotBooking.Api.Services.Foundations.Users
             storageBroker.SelectAllUsers();
 
         public ValueTask<User> ModifyUserAsync(User user) =>
-            storageBroker.UpdateUserAsync(user);
+            TryCatch(async () =>
+            {
+                ValidateUser(user);
+                return await this.storageBroker.UpdateUserAsync(user);
+            });
 
         public ValueTask<User> RemoveUser(User user) =>
             storageBroker.DeleteUserAsync(user);
