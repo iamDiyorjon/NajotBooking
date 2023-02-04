@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using NajotBooking.Api.Models.Users;
 using NajotBooking.Api.Models.Users.Exceptions;
@@ -55,6 +56,50 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyExceptionOnModifyIfDatabaseUpdateExceptionOccursAndLogItAsync()
+        {
+            // given
+            int minutesInPast = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            User randomUser = CreateRandomUser(randomDateTime);
+            User someUser = randomUser;
+            Guid userId = someUser.Id;
+            var databaseUpdateException = new DbUpdateException();
+
+            var failedUserException =
+            new FailedUserStorageException(databaseUpdateException);
+
+            var expectedUserDependencyException =
+                new UserDependencyException(failedUserException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectUserByIdAsync(userId))
+                    .ThrowsAsync(databaseUpdateException);
+
+            // when
+            ValueTask<User> modifyUserTask =
+                this.userService.ModifyUserAsync(someUser);
+
+            UserDependencyException actualUserDependencyException =
+                 await Assert.ThrowsAsync<UserDependencyException>(
+                     modifyUserTask.AsTask);
+
+            // then
+            actualUserDependencyException.Should().BeEquivalentTo(
+                expectedUserDependencyException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectUserByIdAsync(userId), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserDependencyException))), Times.Never);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
