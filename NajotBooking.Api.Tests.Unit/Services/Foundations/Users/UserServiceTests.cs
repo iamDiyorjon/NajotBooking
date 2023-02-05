@@ -59,7 +59,6 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
 
         private static User CreateRandomModifyUser(DateTimeOffset date)
         {
-            int randomDaysInPast = GetRandomNegativeNumber();
             User randomUser = CreateRandomUser(date);
             return randomUser;
         }
