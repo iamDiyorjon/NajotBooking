@@ -75,7 +75,7 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
             var databaseUpdateException = new DbUpdateException();
 
             var failedUserException =
-            new FailedUserStorageException(databaseUpdateException);
+                new FailedUserStorageException(databaseUpdateException);
 
             var expectedUserDependencyException =
                 new UserDependencyException(failedUserException);
@@ -130,7 +130,8 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
 
             // when
             ValueTask<User> modifyUserTask =
-            this.userService.ModifyUserAsync(someUser);
+                this.userService.ModifyUserAsync(someUser);
+
             UserDependencyValidationException actualUserDependencyValidationException =
                 await Assert.ThrowsAsync<UserDependencyValidationException>(
                     modifyUserTask.AsTask);

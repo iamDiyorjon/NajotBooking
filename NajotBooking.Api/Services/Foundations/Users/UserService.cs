@@ -43,7 +43,7 @@ namespace NajotBooking.Api.Services.Foundations.Users
             {
                 ValidateUser(user);
 
-                var maybeUser =
+                User maybeUser =
                     await this.storageBroker.SelectUserByIdAsync(user.Id);
 
                 ValidateStorageUser(maybeUser, user.Id);

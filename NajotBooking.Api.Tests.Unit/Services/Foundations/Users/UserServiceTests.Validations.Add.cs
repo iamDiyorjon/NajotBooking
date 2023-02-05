@@ -71,11 +71,11 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
                 values: "Text is required");
 
             invalidUserException.AddData(
-               key: nameof(User.LastName),
+               key: nameof(User.FirstName),
                values: "Text is required");
 
             invalidUserException.AddData(
-               key: nameof(User.FirstName),
+               key: nameof(User.LastName),
                values: "Text is required");
 
             invalidUserException.AddData(
