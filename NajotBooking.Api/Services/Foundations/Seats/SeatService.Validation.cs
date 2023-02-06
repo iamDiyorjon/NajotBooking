@@ -24,7 +24,7 @@ namespace NajotBooking.Api.Services.Foundations.Seats
                         secondDate: seat.UpdatedDate,
                         secondDateName: nameof(Seat.UpdatedDate)),
 
-                     Parameter: nameof(Seat.CreatedDate)));
+                Parameter: nameof(Seat.CreatedDate)));
         }
 
         private static dynamic IsInvalid(int floor) => new
