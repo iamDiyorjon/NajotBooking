@@ -3,6 +3,7 @@
 // Free To Use to Book Places in Coworking Zones
 // ---------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using NajotBooking.Api.Brokers.Loggings;
 using NajotBooking.Api.Brokers.Storages;
@@ -27,5 +28,8 @@ namespace NajotBooking.Api.Services.Foundations.Orders
 
             return await this.storageBroker.InsertOrderAsync(order);
         });
+
+        public ValueTask<Order> RemoveOrderByIdAsync(Guid orderId) =>
+            throw new NotImplementedException();
     }
 }
