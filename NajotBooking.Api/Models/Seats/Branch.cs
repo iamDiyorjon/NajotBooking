@@ -2,7 +2,7 @@
 {
     public enum Branch
     {
-        Chilonzor = 1,
+        Chilonzor,
         Xadra,
         Chimboy
     }
