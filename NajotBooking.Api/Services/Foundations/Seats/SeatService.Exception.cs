@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using NajotBooking.Api.Models.Seats;
 using NajotBooking.Api.Models.Seats.Exceptions;
 using Xeptions;
@@ -45,6 +46,12 @@ namespace NajotBooking.Api.Services.Foundations.Seats
                     new AlreadyExistsSeatException(duplicateKeyException);
 
                 throw CreateAndDependencyValidationException(alreadyExistsSeatException);
+            }
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            {
+                var lockedTickedException = new LockedSeatException(dbUpdateConcurrencyException);
+
+                throw CreateAndDependencyValidationException(lockedTickedException);
             }
             catch (Exception serviceException)
             {
