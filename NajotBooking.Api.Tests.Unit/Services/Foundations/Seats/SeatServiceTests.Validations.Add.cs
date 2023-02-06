@@ -115,8 +115,8 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
             invalidSeat.UpdatedDate = anotherRandomDate;
             var invalidSeatException = new InvalidSeatException();
             invalidSeatException.AddData(
-            key: nameof(Seat.UpdatedDate),
-                values: $"Date is not the same as {nameof(Seat.CreatedDate)}");
+            key: nameof(Seat.CreatedDate),
+                values: $"Date is not the same as {nameof(Seat.UpdatedDate)}");
 
             var expectedSeatValidationException =
                 new SeatValidationException(invalidSeatException);
