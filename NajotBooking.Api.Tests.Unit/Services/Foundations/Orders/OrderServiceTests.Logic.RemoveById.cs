@@ -28,20 +28,20 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
             Order expectedOrder = deletedOrder.DeepClone();
 
             this.storageBrokerMock.Setup(broker =>
-                broker.SelectOrderById(inputOrderId)).ReturnsAsync(storageOrder);
+                broker.SelectOrderByIdAsync(inputOrderId)).ReturnsAsync(storageOrder);
 
             this.storageBrokerMock.Setup(broker =>
                 broker.DeleteOrderAsync(expectedInputOrder)).ReturnsAsync(deletedOrder);
 
             // when
-            ValueTask<Order> actualOrder =
-                this.orderService.RemoveOrderByIdAsync(inputOrderId);
+            Order actualOrder =
+                await this.orderService.RemoveOrderByIdAsync(inputOrderId);
 
             // then
             actualOrder.Should().BeEquivalentTo(expectedOrder);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectOrderById(inputOrderId), Times.Once);
+                broker.SelectOrderByIdAsync(inputOrderId), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.DeleteOrderAsync(expectedInputOrder), Times.Once);
