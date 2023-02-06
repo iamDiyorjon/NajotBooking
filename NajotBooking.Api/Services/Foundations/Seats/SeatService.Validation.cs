@@ -15,8 +15,16 @@ namespace NajotBooking.Api.Services.Foundations.Seats
                 (Rule: IsInvalid(seat.Branch), Parameter: nameof(Seat.Branch)),
                 (Rule: IsInvalid(seat.Floor), Parameter: nameof(Seat.Floor)),
                 (Rule: IsInvalid(seat.Price), Parameter: nameof(Seat.Price)),
-                (Rule: IsInvalid(seat.CraetedDate), Parameter: nameof(Seat.CraetedDate)),
-                (Rule: IsInvalid(seat.UpdatedDate), Parameter: nameof(Seat.UpdatedDate)));
+                (Rule: IsInvalid(seat.CreatedDate), Parameter: nameof(Seat.CreatedDate)),
+                (Rule: IsInvalid(seat.UpdatedDate), Parameter: nameof(Seat.UpdatedDate)),
+                (Rule: IsNotRecent(seat.CreatedDate), Parameter: nameof(Seat.CreatedDate)),
+
+                (Rule: IsNotSame(
+                        firstDate: seat.CreatedDate,
+                        secondDate: seat.UpdatedDate,
+                        secondDateName: nameof(Seat.UpdatedDate)),
+
+                     Parameter: nameof(Seat.CreatedDate)));
         }
 
         private static dynamic IsInvalid(int floor) => new
@@ -54,6 +62,38 @@ namespace NajotBooking.Api.Services.Foundations.Seats
             bool isDefined = Enum.IsDefined(typeof(T), value);
 
             return isDefined is false;
+        }
+
+        private dynamic IsSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate == secondDate,
+                Message = $"Date is the same as {secondDateName}"
+            };
+
+        private static dynamic IsNotSame(
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
+            string secondDateName) => new
+            {
+                Condition = firstDate != secondDate,
+                Message = $"Date is not the same as {secondDateName}"
+            };
+
+        private dynamic IsNotRecent(DateTimeOffset date) => new
+        {
+            Condition = IsDateNotRecent(date),
+            Message = "Date is not recent"
+        };
+
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime = this.dateTimeBroker.GetCurrentDateTime();
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+
+            return timeDifference.TotalSeconds is > 60 or < 0;
         }
 
         private static void ValidateSeatNotNull(Seat seat)
