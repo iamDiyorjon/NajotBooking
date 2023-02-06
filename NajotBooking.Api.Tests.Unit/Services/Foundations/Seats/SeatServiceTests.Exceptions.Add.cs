@@ -1,6 +1,7 @@
 ﻿using EFxceptions.Models.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using NajotBooking.Api.Models.Seats;
 using NajotBooking.Api.Models.Seats.Exceptions;
@@ -86,6 +87,42 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
 
             this.storageBrokerMock.Verify(broker => broker.InsertSeatAsync(
                 It.IsAny<Seat>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnAddIfDbConcurrencyErrorOccursAndLogItAsync()
+        {
+            // given
+            Seat someSeat = CreateRandomSeat();
+            var dbUpdateConcurrencyException = new DbUpdateConcurrencyException();
+
+            var lockedSeatException = new LockedSeatException(dbUpdateConcurrencyException);
+            var expectedSeatDependencyValidationException = new SeatDependencyValidationException(lockedSeatException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime())
+                    .Throws(dbUpdateConcurrencyException);
+
+            // when
+            ValueTask<Seat> addSeatTask = this.seatService.AddSeatAsync(someSeat);
+
+            SeatDependencyValidationException actualSeatDependencyValidationException =
+                 await Assert.ThrowsAsync<SeatDependencyValidationException>(addSeatTask.AsTask);
+
+            // then
+            actualSeatDependencyValidationException.Should().BeEquivalentTo(expectedSeatDependencyValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker => broker.LogError(It.Is(
+                SameExceptionAs(expectedSeatDependencyValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker => broker.InsertSeatAsync(It.IsAny<Seat>()), Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
