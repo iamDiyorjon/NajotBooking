@@ -63,6 +63,9 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
         private static Seat CreateRandomSeat() =>
             CreateSeatFiller(GetRandomDateTime()).Create();
 
+        private static string GetRandomString() =>
+            new MnemonicString().GetValue();
+
         private static SqlException CreateSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
