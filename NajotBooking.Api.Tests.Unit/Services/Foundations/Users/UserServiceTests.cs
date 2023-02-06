@@ -4,6 +4,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using Microsoft.Data.SqlClient;
@@ -57,9 +58,16 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
 
+        private static IQueryable<User> CreateRandomUsers()
+        {
+            return CreateUserFiller(GetRandomDateTimeOffset())
+                .Create(count: GetRandomNumber()).AsQueryable();
+        }
+
         private static User CreateRandomModifyUser(DateTimeOffset date)
         {
             User randomUser = CreateRandomUser(date);
+
             return randomUser;
         }
 
