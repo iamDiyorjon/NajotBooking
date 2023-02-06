@@ -36,6 +36,8 @@ namespace NajotBooking.Api.Services.Foundations.Orders
 
             Order maybeOrder = await this.storageBroker.SelectOrderByIdAsync(orderId);
 
+            ValidateStorageOrderExists(maybeOrder, orderId);
+
             return await this.storageBroker.DeleteOrderAsync(maybeOrder);
         });
     }
