@@ -16,7 +16,7 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
     public partial class UserServiceTests
     {
         [Fact]
-        public async Task ShouldRemoveGroupPostByIdAsync()
+        public async Task ShouldRemoveUserByIdAsync()
         {
             // given
             Guid randomUserId = Guid.NewGuid();
