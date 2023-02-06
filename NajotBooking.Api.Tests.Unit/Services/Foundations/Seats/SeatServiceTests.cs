@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using Moq;
 using NajotBooking.Api.Brokers.DateTimes;
 using NajotBooking.Api.Brokers.Loggings;
@@ -6,6 +7,7 @@ using NajotBooking.Api.Brokers.Storages;
 using NajotBooking.Api.Models.Seats;
 using NajotBooking.Api.Services.Foundations.Seats;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
 {
@@ -27,6 +29,9 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
                 dateTimeBroker: this.dateTimeBrokerMock.Object,
                 loggingBroker: this.loggingBrokerMock.Object);
         }
+
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
 
         private static DateTimeOffset GetRandomDateTime() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
