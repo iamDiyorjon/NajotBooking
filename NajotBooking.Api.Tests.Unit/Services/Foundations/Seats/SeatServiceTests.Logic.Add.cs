@@ -34,7 +34,7 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
             actualSeat.Should().BeEquivalentTo(expectedSeat);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Never);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.InsertSeatAsync(inputSeat), Times.Once);
