@@ -45,5 +45,41 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public void ShouldThrowServiceExceptionOnRetrieveAllWhenAllServiceErrorOccursAndLogIt()
+        {
+            // given
+            string exceptionMessage = GetRandomMessage();
+            var serviceException = new Exception(exceptionMessage);
+            var failedSeatServiceException = new FailedSeatServiceException(serviceException);
+
+            var expectedSeatServiceException =
+                new SeatServiceException(failedSeatServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectAllSeats()).Throws(serviceException);
+
+            // when
+            Action retrieveAllSeatAction = () =>
+                this.seatService.RetrieveAllSeat();
+
+            SeatServiceException actualSeatServiceException =
+                Assert.Throws<SeatServiceException>(retrieveAllSeatAction);
+
+            // then
+            actualSeatServiceException.Should().BeEquivalentTo(expectedSeatServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectAllSeats(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedSeatServiceException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

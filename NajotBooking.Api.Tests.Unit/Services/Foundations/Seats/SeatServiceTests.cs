@@ -51,6 +51,9 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
             };
         }
 
+        private static string GetRandomMessage() =>
+            new MnemonicString(wordCount: GetRandomNumber()).GetValue();
+
         private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
 
