@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
-using System.Net.Sockets;
-using Microsoft.Data.SqlClient;
 using System.Runtime.Serialization;
+using Microsoft.Data.SqlClient;
 using Moq;
 using NajotBooking.Api.Brokers.DateTimes;
 using NajotBooking.Api.Brokers.Loggings;
@@ -51,6 +51,9 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
             };
         }
 
+        private static string GetRandomMessage() =>
+            new MnemonicString(wordCount: GetRandomNumber()).GetValue();
+
         private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
 
@@ -62,6 +65,15 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
 
         private static Seat CreateRandomSeat() =>
             CreateSeatFiller(GetRandomDateTime()).Create();
+
+        private static IQueryable<Seat> CreateRandomSeats()
+        {
+            return CreateSeatFiller(dates: GetRandomDateTime())
+                .Create(count: GetRandomNumber()).AsQueryable();
+        }
+
+        private static int GetRandomNumber() =>
+            new IntRange(min: 2, max: 99).GetValue();
 
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
