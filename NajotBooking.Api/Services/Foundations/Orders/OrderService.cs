@@ -32,6 +32,8 @@ namespace NajotBooking.Api.Services.Foundations.Orders
         public ValueTask<Order> RemoveOrderByIdAsync(Guid orderId) =>
         TryCatch(async () =>
         {
+            ValidationOrderId(orderId);
+
             Order maybeOrder = await this.storageBroker.SelectOrderByIdAsync(orderId);
 
             return await this.storageBroker.DeleteOrderAsync(maybeOrder);

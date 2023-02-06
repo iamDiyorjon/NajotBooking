@@ -74,6 +74,9 @@ namespace NajotBooking.Api.Services.Foundations.Orders
             Message = "Value is required"
         };
 
+        private void ValidationOrderId(Guid orderId) =>
+            Validate((Rule: IsInvalid(orderId), Parameter: nameof(Order.Id)));
+
         private static dynamic IsNotLessThan(
            DateTimeOffset startDate,
            DateTimeOffset endDate,
