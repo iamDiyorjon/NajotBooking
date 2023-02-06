@@ -53,5 +53,47 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowNotFoundExceptionOnRetrieveByIdIfTeamIsNotFoundAndLogItAsync()
+        {
+            //given
+            Guid someUserId = Guid.NewGuid();
+            User noUser = null;
+
+            var notFoundUserException =
+                new NotFoundUserException(someUserId);
+
+            var expectedUserValidationException =
+                new UserValidationException(notFoundUserException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectUserByIdAsync(someUserId))
+                    .ReturnsAsync(noUser);
+
+            //when
+            ValueTask<User> retrieveUserByIdTask =
+                this.userService.RetrieveUserByIdAsync(someUserId);
+
+            UserValidationException actualUserValidationException =
+                await Assert.ThrowsAsync<UserValidationException>(
+                    retrieveUserByIdTask.AsTask);
+
+            // then
+            actualUserValidationException.Should().BeEquivalentTo
+                (expectedUserValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+               broker.SelectUserByIdAsync(someUserId),
+                    Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedUserValidationException))),
+                        Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
