@@ -30,6 +30,11 @@ namespace NajotBooking.Api.Services.Foundations.Orders
         });
 
         public ValueTask<Order> RemoveOrderByIdAsync(Guid orderId) =>
-            throw new NotImplementedException();
+        TryCatch(async () =>
+        {
+            Order maybeOrder = await this.storageBroker.SelectOrderByIdAsync(orderId);
+
+            return await this.storageBroker.DeleteOrderAsync(maybeOrder);
+        });
     }
 }
