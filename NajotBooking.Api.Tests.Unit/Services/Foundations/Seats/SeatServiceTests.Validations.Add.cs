@@ -64,10 +64,6 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
                 values: "Number is required");
 
             invalidSeatException.AddData(
-                key: nameof(Seat.Branch),
-                values: "Value is not recognized");
-
-            invalidSeatException.AddData(
                key: nameof(Seat.Floor),
                values: "Number is required");
 

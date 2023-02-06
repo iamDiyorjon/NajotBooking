@@ -55,6 +55,7 @@ namespace NajotBooking.Api.Services.Foundations.Seats
             }
 
         }
+
         private IQueryable<Seat> TryCatch(ReturningSeatsFunction returningSeatsFunction)
         {
             try
@@ -85,6 +86,7 @@ namespace NajotBooking.Api.Services.Foundations.Seats
             return seatVadlidationException;
 
         }
+
         private SeatDependencyException CreateAndLogCriticalDependencyException(Xeption exeption)
         {
             var seatDependencyException = new SeatDependencyException(exeption);
@@ -92,6 +94,7 @@ namespace NajotBooking.Api.Services.Foundations.Seats
 
             return seatDependencyException;
         }
+
         private SeatDependencyValidationException CreateAndDependencyValidationException(Xeption exception)
         {
             var seatDependencyValidationException =
@@ -101,6 +104,7 @@ namespace NajotBooking.Api.Services.Foundations.Seats
 
             return seatDependencyValidationException;
         }
+
         private SeatServiceException CreateAndLogServiceException(Xeption exception)
         {
             var seatServiceException =

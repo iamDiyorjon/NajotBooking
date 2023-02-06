@@ -37,6 +37,12 @@ namespace NajotBooking.Api.Services.Foundations.Seats
             Message = "Id is required"
         };
 
+        private static dynamic IsInvalid(DateTimeOffset date) => new
+        {
+            Condition = date == default,
+            Message = "Value is required"
+        };
+
         private static dynamic IsInvalid<T>(T value) => new
         {
             Condition = IsEnumInvalid(value),
