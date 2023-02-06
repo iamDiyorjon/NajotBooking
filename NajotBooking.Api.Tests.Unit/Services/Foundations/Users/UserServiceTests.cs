@@ -36,8 +36,14 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
         private static int GetRandomNumber() =>
            new IntRange(min: 1, max: 10).GetValue();
 
+        private static int GetRandomNegativeNumber() =>
+            -1 * new IntRange(min: 2, max: 10).GetValue();
+
         private static User CreateRandomUser() =>
             CreateUserFiller(GetRandomDateTimeOffset()).Create();
+
+        private static User CreateRandomUser(DateTimeOffset date) =>
+            CreateUserFiller(date).Create();
 
         private static string GetRandomMessage() =>
            new MnemonicString(wordCount: GetRandomNumber()).GetValue();
@@ -50,6 +56,12 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
 
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
+
+        private static User CreateRandomModifyUser(DateTimeOffset date)
+        {
+            User randomUser = CreateRandomUser(date);
+            return randomUser;
+        }
 
         private static Filler<User> CreateUserFiller(DateTimeOffset dates)
         {

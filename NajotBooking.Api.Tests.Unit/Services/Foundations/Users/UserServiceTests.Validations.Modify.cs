@@ -16,40 +16,39 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
     public partial class UserServiceTests
     {
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnAddIfUserIsNullAndLogItAsync()
+        public async Task ShouldThrowValidationExceptionOnModifyIfUserIsNullAndLogItAsync()
         {
             // given
             User nullUser = null;
+            var nullUserException = new NullUserException();
 
-            var nullUserException =
-                new NullUserException();
-
-            var expecteUserValidationException =
+            var expectedUserValidationException =
                 new UserValidationException(nullUserException);
 
             // when
-            ValueTask<User> addUserTask =
-                this.userService.AddUserAsync(nullUser);
+            ValueTask<User> modifyUserTask =
+                this.userService.ModifyUserAsync(nullUser);
 
             UserValidationException actualUserValidationException =
                 await Assert.ThrowsAsync<UserValidationException>(
-                    addUserTask.AsTask);
+                    modifyUserTask.AsTask);
 
             // then
-            actualUserValidationException.Should().BeEquivalentTo(
-                expecteUserValidationException);
+            actualUserValidationException.Should().BeEquivalentTo(expectedUserValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expecteUserValidationException))),
-                    Times.Once);
+                    expectedUserValidationException))), Times.Once);
 
-            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdateUserAsync(It.IsAny<User>()), Times.Never);
+
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
-        public async Task ShouldThrowValidationExceptionOnAddIfUserIsInvalidAndLogItAsync()
+        public async Task ShouldThrowValidationExceptionOnModifyIfUserIsInvalidAndLogItAsync()
         {
             // given
             Guid invalidGuid = Guid.Empty;
@@ -63,19 +62,19 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
                 new InvalidUserException();
 
             invalidUserException.AddData(
-                key: nameof(User.Id),
-                values: "Id is required");
+                 key: nameof(User.Id),
+                 values: "Id is required");
 
             invalidUserException.AddData(
                 key: nameof(User.Email),
                 values: "Text is required");
 
             invalidUserException.AddData(
-               key: nameof(User.FirstName),
+               key: nameof(User.LastName),
                values: "Text is required");
 
             invalidUserException.AddData(
-               key: nameof(User.LastName),
+               key: nameof(User.FirstName),
                values: "Text is required");
 
             invalidUserException.AddData(
@@ -86,28 +85,26 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Users
                 new UserValidationException(invalidUserException);
 
             // when
-            ValueTask<User> addUserTask =
-                this.userService.AddUserAsync(invalidUser);
+            ValueTask<User> modifyUserTask =
+                this.userService.ModifyUserAsync(invalidUser);
 
             UserValidationException actualUserValidationException =
                 await Assert.ThrowsAsync<UserValidationException>(
-                    addUserTask.AsTask);
+                    modifyUserTask.AsTask);
 
-            // then
-            actualUserValidationException.Should().BeEquivalentTo(
-                expectedUserValidationException);
-
-            this.storageBrokerMock.Verify(broker =>
-                broker.InsertUserAsync(invalidUser),
-                    Times.Never);
+            //then
+            actualUserValidationException.Should()
+                .BeEquivalentTo(expectedUserValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedUserValidationException))),
-                        Times.Once);
+                    expectedUserValidationException))), Times.Once);
 
-            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdateUserAsync(It.IsAny<User>()), Times.Never);
+
             this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
