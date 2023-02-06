@@ -8,6 +8,7 @@ using NajotBooking.Api.Models.Seats;
 using NajotBooking.Api.Services.Foundations.Seats;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
 {
@@ -28,6 +29,23 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
                 storageBroker: this.storageBrokerMock.Object,
                 dateTimeBroker: this.dateTimeBrokerMock.Object,
                 loggingBroker: this.loggingBrokerMock.Object);
+        }
+
+        public static TheoryData<int> InvalidSeconds()
+        {
+            int secondsInPast = -1 * new IntRange(
+                min: 60,
+                max: short.MaxValue).GetValue();
+
+            int secondsInFuture = new IntRange(
+                min: 0,
+                max: short.MaxValue).GetValue();
+
+            return new TheoryData<int>
+            {
+                secondsInPast,
+                secondsInFuture
+            };
         }
 
         private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
