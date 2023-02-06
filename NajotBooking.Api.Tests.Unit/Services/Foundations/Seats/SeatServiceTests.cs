@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Net.Sockets;
+using Microsoft.Data.SqlClient;
+using System.Runtime.Serialization;
 using Moq;
 using NajotBooking.Api.Brokers.DateTimes;
 using NajotBooking.Api.Brokers.Loggings;
@@ -56,6 +59,12 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
 
         private static Seat CreateRandomSeat(DateTimeOffset dates) =>
             CreateSeatFiller(dates).Create();
+
+        private static Seat CreateRandomSeat() =>
+            CreateSeatFiller(GetRandomDateTime()).Create();
+
+        private static SqlException CreateSqlException() =>
+            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
         private static Filler<Seat> CreateSeatFiller(DateTimeOffset dates)
         {
