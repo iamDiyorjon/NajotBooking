@@ -33,7 +33,16 @@ namespace NajotBooking.Api.Services.Foundations.Users
              });
 
         public ValueTask<User> RetrieveUserByIdAsync(Guid userId) =>
-            storageBroker.SelectUserByIdAsync(userId);
+        TryCatch(async () =>
+        {
+            ValidateUserId(userId);
+            User maybeUser =
+                    await this.storageBroker.SelectUserByIdAsync(userId);
+
+            ValidateStorageUser(maybeUser, userId);
+
+            return maybeUser;
+        });
 
         public IQueryable<User> RetrieveAllUsers() =>
             TryCatch(() => this.storageBroker.SelectAllUsers());
