@@ -1,12 +1,12 @@
-﻿using EFxceptions.Models.Exceptions;
+﻿using System;
+using System.Threading.Tasks;
+using EFxceptions.Models.Exceptions;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NajotBooking.Api.Models.Seats;
 using NajotBooking.Api.Models.Seats.Exceptions;
-using System.Net.Sockets;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
@@ -123,6 +123,49 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
                 SameExceptionAs(expectedSeatDependencyValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker => broker.InsertSeatAsync(It.IsAny<Seat>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnAddIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            Seat someSeat = CreateRandomSeat();
+            var serviceException = new Exception();
+
+            var failedSeatServiceException =
+                new FailedSeatServiceException(serviceException);
+
+            var expectedSeatServiceException =
+                new SeatServiceException(failedSeatServiceException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Throws(serviceException);
+
+            // when
+            ValueTask<Seat> addSeatTask =
+                this.seatService.AddSeatAsync(someSeat);
+
+            SeatServiceException actualSeatServiceException =
+                await Assert.ThrowsAsync<SeatServiceException>(addSeatTask.AsTask);
+
+            // then
+            actualSeatServiceException.Should().BeEquivalentTo(
+                expectedSeatServiceException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedSeatServiceException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertSeatAsync(It.IsAny<Seat>()),
+                    Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
