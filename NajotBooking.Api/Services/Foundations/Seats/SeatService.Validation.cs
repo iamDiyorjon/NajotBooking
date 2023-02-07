@@ -2,6 +2,7 @@
 using NajotBooking.Api.Models.Seats;
 using NajotBooking.Api.Models.Seats.Exceptions;
 using NajotBooking.Api.Models.Seats;
+using System.Net.Sockets;
 
 namespace NajotBooking.Api.Services.Foundations.Seats
 {
@@ -105,6 +106,14 @@ namespace NajotBooking.Api.Services.Foundations.Seats
             if (seat is null)
             {
                 throw new NullSeatException();
+            }
+        }
+
+        private void ValidateStorageSeat(Seat maybeSeat, Guid seatId)
+        {
+            if (maybeSeat is null)
+            {
+                throw new NotFoundSeatException(seatId);
             }
         }
 
