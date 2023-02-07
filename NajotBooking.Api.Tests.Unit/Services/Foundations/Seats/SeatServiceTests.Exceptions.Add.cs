@@ -25,7 +25,7 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
                 new SeatDependencyException(failedSeatStorageException);
 
             this.dateTimeBrokerMock.Setup(broker =>
-            broker.GetCurrentDateTime())
+                broker.GetCurrentDateTime())
                     .Throws(sqlException);
 
             // when
