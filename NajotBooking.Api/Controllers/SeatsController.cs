@@ -68,8 +68,31 @@ namespace NajotBooking.Api.Controllers
         }
 
         [HttpGet("{seatId}")]
-        public async ValueTask<ActionResult<Seat>> GetByIdAsync(Guid id) =>
-            await this.seatService.RetrieveSeatByIdAsync(id);
+        public async ValueTask<ActionResult<Seat>> GetSeatByIdAsync(Guid seatId)
+        {
+            try
+            {
+                return await this.seatService.RetrieveSeatByIdAsync(seatId);
+            }
+            catch (SeatDependencyException seatDependencyException)
+            {
+                return InternalServerError(seatDependencyException.InnerException);
+            }
+            catch (SeatValidationException seatValidationException)
+                when (seatValidationException.InnerException is InvalidSeatException)
+            {
+                return BadRequest(seatValidationException.InnerException);
+            }
+            catch (SeatValidationException seatValidationException)
+                when (seatValidationException.InnerException is NotFoundSeatException)
+            {
+                return NotFound(seatValidationException.InnerException);
+            }
+            catch (SeatServiceException seatServiceException)
+            {
+                return InternalServerError(seatServiceException.InnerException);
+            }
+        }
 
         [HttpPut]
         public async ValueTask<ActionResult<Seat>> PutSeatAsync(Seat seat) =>
