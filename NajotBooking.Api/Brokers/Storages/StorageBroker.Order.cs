@@ -18,7 +18,7 @@ namespace NajotBooking.Api.Brokers.Storages
         public IQueryable<Order> SelectAllOrders() =>
             SelectAll<Order>();
 
-        public async ValueTask<Order> SelectOrderById(Guid id) =>
+        public async ValueTask<Order> SelectOrderByIdAsync(Guid id) =>
             await SelectAsync<Order>(id);
 
         public async ValueTask<Order> UpdateOrderAsync(Order order) =>

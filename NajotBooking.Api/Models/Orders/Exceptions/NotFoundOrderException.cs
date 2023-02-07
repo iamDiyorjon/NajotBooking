@@ -4,14 +4,14 @@
 // ---------------------------------------------------------------
 
 using System;
-using System.Threading.Tasks;
-using NajotBooking.Api.Models.Orders;
+using Xeptions;
 
-namespace NajotBooking.Api.Services.Foundations.Orders
+namespace NajotBooking.Api.Models.Orders.Exceptions
 {
-    public interface IOrderService
+    public class NotFoundOrderException : Xeption
     {
-        ValueTask<Order> AddOrderAsync(Order order);
-        ValueTask<Order> RemoveOrderByIdAsync(Guid orderId);
+        public NotFoundOrderException(Guid orderId)
+           : base(message: $"Couldn't find order with id: {orderId}.")
+        { }
     }
 }
