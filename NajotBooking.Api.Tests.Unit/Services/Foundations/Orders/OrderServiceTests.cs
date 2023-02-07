@@ -77,5 +77,8 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
                 .Create(count: GetRandomNumber())
                     .AsQueryable();
         }
+
+        private Expression<Func<Exception, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
     }
 }

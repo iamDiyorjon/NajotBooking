@@ -31,6 +31,6 @@ namespace NajotBooking.Api.Services.Foundations.Orders
         });
 
         public IQueryable<Order> RetrieveAllOrders() =>
-            throw new NotImplementedException();
+        TryCatch(() => this.storageBroker.SelectAllOrders());
     }
 }

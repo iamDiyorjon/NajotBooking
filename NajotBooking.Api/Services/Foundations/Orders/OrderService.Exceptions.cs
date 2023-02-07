@@ -4,6 +4,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
@@ -16,6 +17,7 @@ namespace NajotBooking.Api.Services.Foundations.Orders
 {
     public partial class OrderService
     {
+        private delegate IQueryable<Order> ReturningOrdersFunction();
         private delegate ValueTask<Order> ReturningOrderFunction();
 
         private async ValueTask<Order> TryCatch(ReturningOrderFunction returningOrderFunction)
@@ -56,6 +58,18 @@ namespace NajotBooking.Api.Services.Foundations.Orders
                 var failedOrderServiceException = new FailedOrderServiceException(exception);
 
                 throw CreateAndLogServiceException(failedOrderServiceException);
+            }
+        }
+
+        private IQueryable<Order> TryCatch(ReturningOrdersFunction returningOrdersFunction)
+        {
+            try
+            {
+                return returningOrdersFunction();
+            }
+            catch
+            {
+                throw new NotImplementedException();
             }
         }
 
