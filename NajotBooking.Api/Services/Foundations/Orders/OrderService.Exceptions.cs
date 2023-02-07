@@ -79,7 +79,7 @@ namespace NajotBooking.Api.Services.Foundations.Orders
             }
             catch(Exception serviceException)
             {
-                var failedOrderServiceException = new FailedOrderServiceException(exception);
+                var failedOrderServiceException = new FailedOrderServiceException(serviceException);
 
                 throw CreateAndLogServiceException(failedOrderServiceException);
             }
