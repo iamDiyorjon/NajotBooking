@@ -4,6 +4,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using NajotBooking.Api.Brokers.Loggings;
 using NajotBooking.Api.Brokers.Storages;
@@ -28,6 +29,9 @@ namespace NajotBooking.Api.Services.Foundations.Orders
 
             return await this.storageBroker.InsertOrderAsync(order);
         });
+
+        public IQueryable<Order> RetrieveAllOrders() =>
+        TryCatch(() => this.storageBroker.SelectAllOrders());
 
         public ValueTask<Order> RemoveOrderByIdAsync(Guid orderId) =>
         TryCatch(async () =>

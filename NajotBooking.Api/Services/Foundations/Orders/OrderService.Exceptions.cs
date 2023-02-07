@@ -4,6 +4,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
@@ -16,6 +17,7 @@ namespace NajotBooking.Api.Services.Foundations.Orders
 {
     public partial class OrderService
     {
+        private delegate IQueryable<Order> ReturningOrdersFunction();
         private delegate ValueTask<Order> ReturningOrderFunction();
 
         private async ValueTask<Order> TryCatch(ReturningOrderFunction returningOrderFunction)
@@ -63,6 +65,26 @@ namespace NajotBooking.Api.Services.Foundations.Orders
             }
         }
 
+        private IQueryable<Order> TryCatch(ReturningOrdersFunction returningOrdersFunction)
+        {
+            try
+            {
+                return returningOrdersFunction();
+            }
+            catch(SqlException sqlException) 
+            {
+                var failedOrderServiceException = new FailedOrderServiceException(sqlException);
+            
+                throw CreateAndLogCriticalDependencyException(failedOrderServiceException);
+            }
+            catch(Exception serviceException)
+            {
+                var failedOrderServiceException = new FailedOrderServiceException(serviceException);
+
+                throw CreateAndLogServiceException(failedOrderServiceException);
+            }
+        }
+
         private OrderValidationException CreateAndLogValidationException(Xeption exception)
         {
             var orderValidationException = new OrderValidationException(exception);
@@ -88,7 +110,6 @@ namespace NajotBooking.Api.Services.Foundations.Orders
 
             return orderDependencyValidationException;
         }
-
         private OrderServiceException CreateAndLogServiceException(Xeption exception)
         {
             var orderServiceException = new OrderServiceException(exception);

@@ -4,8 +4,10 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
+using FluentAssertions.Equivalency.Steps;
 using Microsoft.Data.SqlClient;
 using Moq;
 using NajotBooking.Api.Brokers.Loggings;
@@ -68,5 +70,18 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
 
             return filler;
         }
+
+        private static IQueryable<Order> CreateRandomOrders()
+        {
+            return CreateOrderFiller()
+                .Create(count: GetRandomNumber())
+                    .AsQueryable();
+        }
+
+        private Expression<Func<Exception, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
+
+        private static string GetRandomMessage() =>
+            new MnemonicString(wordCount: GetRandomNumber()).GetValue();
     }
 }
