@@ -88,7 +88,7 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
                     expectedOrderValidationException))), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-              broker.DeleteOrderAsync(It.IsAny<Order>()), Times.Never);
+                broker.DeleteOrderAsync(It.IsAny<Order>()), Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
