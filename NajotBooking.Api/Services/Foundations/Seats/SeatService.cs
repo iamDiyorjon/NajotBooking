@@ -39,7 +39,7 @@ namespace NajotBooking.Api.Services.Foundations.Seats
             this.storageBroker.DeleteSeatAsync(seat);
 
         public IQueryable<Seat> RetrieveAllSeat() =>
-            this.storageBroker.SelectAllSeats();
+            TryCatch(() => this.storageBroker.SelectAllSeats());
 
         public ValueTask<Seat> RetrieveSeatByIdAsync(Guid seatId) =>
             this.storageBroker.SelectSeatByIdAsync(seatId);

@@ -39,6 +39,14 @@ namespace NajotBooking.Api.Services.Foundations.Orders
             }
         }
 
+        private static void ValidateStorageOrderExists(Order maybeOrder, Guid orderId)
+        {
+            if (maybeOrder is null)
+            {
+                throw new NotFoundOrderException(orderId);
+            }
+        }
+
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
             InvalidOrderException invalidOrderException = new InvalidOrderException();
@@ -73,6 +81,9 @@ namespace NajotBooking.Api.Services.Foundations.Orders
             Condition = date == default,
             Message = "Value is required"
         };
+
+        private void ValidationOrderId(Guid orderId) =>
+            Validate((Rule: IsInvalid(orderId), Parameter: nameof(Order.Id)));
 
         private static dynamic IsNotLessThan(
            DateTimeOffset startDate,

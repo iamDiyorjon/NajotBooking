@@ -16,6 +16,6 @@ namespace NajotBooking.Api.Services.Foundations.Users
         ValueTask<User> RetrieveUserByIdAsync(Guid userId);
         IQueryable<User> RetrieveAllUsers();
         ValueTask<User> ModifyUserAsync(User user);
-        ValueTask<User> RemoveUser(User user);
+        ValueTask<User> RemoveUserByIdAsync(Guid userId);
     }
 }

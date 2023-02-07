@@ -33,15 +33,44 @@ namespace NajotBooking.Api.Services.Foundations.Users
              });
 
         public ValueTask<User> RetrieveUserByIdAsync(Guid userId) =>
-            storageBroker.SelectUserByIdAsync(userId);
+        TryCatch(async () =>
+        {
+            ValidateUserId(userId);
+            User maybeUser =
+                    await this.storageBroker.SelectUserByIdAsync(userId);
+
+            ValidateStorageUser(maybeUser, userId);
+
+            return maybeUser;
+        });
 
         public IQueryable<User> RetrieveAllUsers() =>
-            storageBroker.SelectAllUsers();
+            TryCatch(() => this.storageBroker.SelectAllUsers());
 
         public ValueTask<User> ModifyUserAsync(User user) =>
-            storageBroker.UpdateUserAsync(user);
+            TryCatch(async () =>
+            {
+                ValidateUser(user);
 
-        public ValueTask<User> RemoveUser(User user) =>
-            storageBroker.DeleteUserAsync(user);
+                User maybeUser =
+                    await this.storageBroker.SelectUserByIdAsync(user.Id);
+
+                ValidateStorageUser(maybeUser, user.Id);
+
+                return await this.storageBroker.UpdateUserAsync(user);
+            });
+
+        public ValueTask<User> RemoveUserByIdAsync(Guid userId) =>
+        TryCatch(async () =>
+        {
+            ValidateUserId(userId);
+
+            User maybeUser =
+                await this.storageBroker.SelectUserByIdAsync(userId);
+
+            ValidateStorageUser(maybeUser, userId);
+
+            return await this.storageBroker.DeleteUserAsync(maybeUser);
+        });
     }
 }

@@ -34,6 +34,10 @@ namespace NajotBooking.Api.Services.Foundations.Orders
             {
                 throw CreateAndLogValidationException(invalidOrderException);
             }
+            catch (NotFoundOrderException notFoundOrderException)
+            {
+                throw CreateAndLogValidationException(notFoundOrderException);
+            }
             catch (SqlException sqlException)
             {
                 var failedOrderStorageException = new FailedOrderStorageException(sqlException);

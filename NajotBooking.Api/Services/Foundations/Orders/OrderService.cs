@@ -32,5 +32,17 @@ namespace NajotBooking.Api.Services.Foundations.Orders
 
         public IQueryable<Order> RetrieveAllOrders() =>
         TryCatch(() => this.storageBroker.SelectAllOrders());
+
+        public ValueTask<Order> RemoveOrderByIdAsync(Guid orderId) =>
+        TryCatch(async () =>
+        {
+            ValidationOrderId(orderId);
+
+            Order maybeOrder = await this.storageBroker.SelectOrderByIdAsync(orderId);
+
+            ValidateStorageOrderExists(maybeOrder, orderId);
+
+            return await this.storageBroker.DeleteOrderAsync(maybeOrder);
+        });
     }
 }
