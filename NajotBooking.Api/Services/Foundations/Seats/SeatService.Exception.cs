@@ -29,7 +29,7 @@ namespace NajotBooking.Api.Services.Foundations.Seats
             {
                 throw CreateAndLogValidationException(invalidSeatException);
             }
-            catch (NotFoundUserException notFoundUserException)
+            catch (NotFoundSeatException notFoundUserException)
             {
                 throw CreateAndLogValidationException(notFoundUserException);
             }

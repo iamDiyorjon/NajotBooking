@@ -3,9 +3,9 @@ using Xeptions;
 
 namespace NajotBooking.Api.Models.Seats.Exceptions
 {
-    public class NotFoundUserException : Xeption
+    public class NotFoundSeatException : Xeption
     {
-        public NotFoundUserException(Guid seatId)
+        public NotFoundSeatException(Guid seatId)
             : base(message: $"Couldn't find seat with it {seatId}.")
         { }
     }
