@@ -49,5 +49,43 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRetrieveByIdAsyncIfServiceErrorOccursAndLogItAsync()
+        {
+            //given
+            Guid someId = Guid.NewGuid();
+            var serviceException = new Exception();
+
+            var failedSeatServiceException =
+                new FailedSeatServiceException(serviceException);
+
+            var expectedSeatServiceExcpetion =
+                new SeatServiceException(failedSeatServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectSeatByIdAsync(It.IsAny<Guid>())).ThrowsAsync(serviceException);
+
+            //when
+            ValueTask<Seat> retrieveSeatById =
+                this.seatService.RetrieveSeatByIdAsync(someId);
+
+            SeatServiceException actualTeamServiceException =
+                await Assert.ThrowsAsync<SeatServiceException>(retrieveSeatById.AsTask);
+
+            // then
+            actualTeamServiceException.Should().BeEquivalentTo(expectedSeatServiceExcpetion);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectSeatByIdAsync(It.IsAny<Guid>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+               broker.LogError(It.Is(SameExceptionAs(
+                   expectedSeatServiceExcpetion))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
