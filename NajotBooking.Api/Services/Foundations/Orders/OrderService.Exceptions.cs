@@ -67,6 +67,12 @@ namespace NajotBooking.Api.Services.Foundations.Orders
             {
                 return returningOrdersFunction();
             }
+            catch(SqlException sqlException) 
+            {
+                var failedOrderServiceException = new FailedOrderServiceException(sqlException);
+            
+                throw CreateAndLogCriticalDependencyException(failedOrderServiceException);
+            }
             catch
             {
                 throw new NotImplementedException();
@@ -98,7 +104,6 @@ namespace NajotBooking.Api.Services.Foundations.Orders
 
             return orderDependencyValidationException;
         }
-
         private OrderServiceException CreateAndLogServiceException(Xeption exception)
         {
             var orderServiceException = new OrderServiceException(exception);

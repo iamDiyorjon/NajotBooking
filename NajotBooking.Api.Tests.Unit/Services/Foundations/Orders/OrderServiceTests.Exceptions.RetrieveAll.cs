@@ -1,4 +1,9 @@
-﻿using FluentAssertions;
+﻿// ---------------------------------------------------------------
+// Copyright (c) Coalition Of The THE STANDART SHARPISTS
+// Free To Use To Book Places In Coworking Zones
+// ---------------------------------------------------------------
+
+using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
 using NajotBooking.Api.Models.Orders.Exceptions;
