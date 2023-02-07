@@ -80,5 +80,8 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
 
         private Expression<Func<Exception, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
+
+        private static string GetRandomMessage() =>
+            new MnemonicString(wordCount: GetRandomNumber()).GetValue();
     }
 }

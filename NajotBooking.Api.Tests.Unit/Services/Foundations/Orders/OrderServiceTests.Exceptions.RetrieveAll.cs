@@ -48,5 +48,42 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        private void ShouldThrowServiceExceptionOnRetrieveAllWhenAllServiceErrorOccursAndLogIt()
+        {
+            //given
+            string exception = GetRandomMessage();
+            var serviceException = new Exception(exception);
+            var failedOrderServiceException = new FailedOrderServiceException(serviceException);
+
+            var expectedOrderServiceException = 
+                new OrderServiceException(failedOrderServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectAllOrders()).Throws(serviceException);
+
+            //when
+            Action retrieveAllAction = () =>
+                this.orderService.RetrieveAllOrders();
+
+            OrderServiceException actualOrderServiceException = 
+                Assert.Throws<OrderServiceException>(retrieveAllAction);
+
+            //then
+            actualOrderServiceException.Should().BeEquivalentTo(expectedOrderServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectAllOrders(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+
+                broker.LogCritical(It.Is(SameExceptionAs(expectedOrderServiceException))),
+                    Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+
+        }
     }
 }
