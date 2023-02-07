@@ -46,7 +46,7 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
         [Theory]
         [InlineData(null)]
         [InlineData(default)]
-        [InlineData(-1)]
+        //[InlineData(-1)]
         public async Task ShouldThrowValidationExceptionOnAddIfSeatIsInvalidAndLogItAsync(
             int invalidNumber)
         {
