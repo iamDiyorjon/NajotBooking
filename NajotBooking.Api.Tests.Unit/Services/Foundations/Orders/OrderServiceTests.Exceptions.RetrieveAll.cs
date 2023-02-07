@@ -82,7 +82,6 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
-
         }
     }
 }
