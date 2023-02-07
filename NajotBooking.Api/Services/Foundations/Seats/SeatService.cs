@@ -42,6 +42,16 @@ namespace NajotBooking.Api.Services.Foundations.Seats
             TryCatch(() => this.storageBroker.SelectAllSeats());
 
         public ValueTask<Seat> RetrieveSeatByIdAsync(Guid seatId) =>
-            this.storageBroker.SelectSeatByIdAsync(seatId);
+            TryCatch(async () =>
+            {
+                ValidateSeatId(seatId);
+
+                Seat maybeSeat = await this.storageBroker.SelectSeatByIdAsync(seatId);
+                
+                ValidateStorageSeat(maybeSeat, seatId);
+
+                return maybeSeat;
+            });
+            
     }
 }
