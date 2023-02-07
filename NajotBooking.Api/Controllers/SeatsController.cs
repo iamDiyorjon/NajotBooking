@@ -48,16 +48,28 @@ namespace NajotBooking.Api.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult<IQueryable<Seat>> GetAllSeats()
+        {
+            try
+            {
+                IQueryable<Seat> allSeats = this.seatService.RetrieveAllSeat();
+
+                return Ok(allSeats);
+            }
+            catch (SeatDependencyException seatDependencyException)
+            {
+                return InternalServerError(seatDependencyException.InnerException);
+            }
+            catch (SeatServiceException seatServiceException)
+            {
+                return InternalServerError(seatServiceException.InnerException);
+            }
+        }
+
         [HttpGet("{seatId}")]
         public async ValueTask<ActionResult<Seat>> GetByIdAsync(Guid id) =>
             await this.seatService.RetrieveSeatByIdAsync(id);
-
-        [HttpGet]
-        public ActionResult<IQueryable<Seat>> GetAll()
-        {
-            IQueryable<Seat> seats = this.seatService.RetrieveAllSeat();
-            return Ok(seats);
-        }
 
         [HttpPut]
         public async ValueTask<ActionResult<Seat>> PutSeatAsync(Seat seat) =>
