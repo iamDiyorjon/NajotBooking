@@ -77,8 +77,7 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
                 broker.SelectAllOrders(), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
-
-                broker.LogCritical(It.Is(SameExceptionAs(expectedOrderServiceException))),
+                broker.LogError(It.Is(SameExceptionAs(expectedOrderServiceException))),
                     Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
