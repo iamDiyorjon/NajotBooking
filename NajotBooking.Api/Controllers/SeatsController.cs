@@ -3,13 +3,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NajotBooking.Api.Models.Seats;
+using NajotBooking.Api.Models.Seats.Exceptions;
 using NajotBooking.Api.Services.Foundations.Seats;
+using RESTFulSense.Controllers;
 
 namespace NajotBooking.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SeatsController : ControllerBase
+    public class SeatsController : RESTFulController
     {
         private readonly ISeatService seatService;
 
@@ -17,8 +19,34 @@ namespace NajotBooking.Api.Controllers
             this.seatService = seatService;
 
         [HttpPost]
-        public async ValueTask<ActionResult<Seat>> PostSeatAsync(Seat seat) =>
-            await this.seatService.AddSeatAsync(seat);
+        public async ValueTask<ActionResult<Seat>> PostSeatAsync(Seat seat)
+        {
+            try
+            {
+                return await this.seatService.AddSeatAsync(seat);
+            }
+            catch (SeatValidationException seatValidationException)
+            {
+                return BadRequest(seatValidationException.InnerException);
+            }
+            catch (SeatDependencyValidationException seatDependencyValidationException)
+                when (seatDependencyValidationException.InnerException is AlreadyExistsSeatException)
+            {
+                return Conflict(seatDependencyValidationException.InnerException);
+            }
+            catch (SeatDependencyValidationException seatDependencyValidationException)
+            {
+                return BadRequest(seatDependencyValidationException.InnerException);
+            }
+            catch (SeatDependencyException seatDependencyException)
+            {
+                return InternalServerError(seatDependencyException.InnerException);
+            }
+            catch (SeatServiceException seatServiceException)
+            {
+                return InternalServerError(seatServiceException.InnerException);
+            }
+        }
 
         [HttpGet("{seatId}")]
         public async ValueTask<ActionResult<Seat>> GetByIdAsync(Guid id) =>
