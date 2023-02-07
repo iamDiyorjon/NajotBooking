@@ -1,6 +1,7 @@
 ﻿using System;
 using NajotBooking.Api.Models.Seats;
 using NajotBooking.Api.Models.Seats.Exceptions;
+using NajotBooking.Api.Models.Seats;
 
 namespace NajotBooking.Api.Services.Foundations.Seats
 {
@@ -26,6 +27,9 @@ namespace NajotBooking.Api.Services.Foundations.Seats
 
                 Parameter: nameof(Seat.CreatedDate)));
         }
+
+        private void ValidateSeatId(Guid seatId) =>
+            Validate((Rule: IsInvalid(seatId), Parameter: nameof(Seat.Id)));
 
         private static dynamic IsInvalid(int floor) => new
         {
