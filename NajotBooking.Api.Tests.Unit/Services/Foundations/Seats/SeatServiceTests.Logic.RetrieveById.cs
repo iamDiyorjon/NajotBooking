@@ -21,7 +21,7 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
             Seat expectedSeat = storedSeat.DeepClone();
 
             this.storageBrokerMock.Setup(broker =>
-              broker.SelectSeatByIdAsync(randomSeatId)).ReturnsAsync(storedSeat);
+                broker.SelectSeatByIdAsync(randomSeatId)).ReturnsAsync(storedSeat);
 
             //when
             Seat actualSeat =
