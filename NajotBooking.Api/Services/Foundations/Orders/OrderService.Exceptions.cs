@@ -73,7 +73,7 @@ namespace NajotBooking.Api.Services.Foundations.Orders
             
                 throw CreateAndLogCriticalDependencyException(failedOrderServiceException);
             }
-            catch(Exception exception)
+            catch(Exception serviceException)
             {
                 var failedOrderServiceException = new FailedOrderServiceException(exception);
 
