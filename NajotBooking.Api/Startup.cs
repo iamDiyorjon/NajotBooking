@@ -12,7 +12,9 @@ using Microsoft.OpenApi.Models;
 using NajotBooking.Api.Brokers.DateTimes;
 using NajotBooking.Api.Brokers.Loggings;
 using NajotBooking.Api.Brokers.Storages;
+using NajotBooking.Api.Services.Foundations.Orders;
 using NajotBooking.Api.Services.Foundations.Seats;
+using NajotBooking.Api.Services.Foundations.Users;
 
 namespace NajotBooking.Api
 {
@@ -27,16 +29,15 @@ namespace NajotBooking.Api
         {
 
             services.AddControllers();
-            services.AddTransient<IStorageBroker, StorageBroker>();
-            services.AddTransient<ILoggingBroker, LoggingBroker>();
-            services.AddTransient<IDateTimeBroker, DateTimeBroker>();
-            services.AddTransient<ISeatService, SeatService>();
+            services.AddDbContext<StorageBroker>();
+            RegisterBrokers(services);
+            AddFoundationServices(services);
 
             services.AddSwaggerGen(config =>
             {
                 config.SwaggerDoc(
                     name: "v1",
-                    info: new OpenApiInfo { Title = "Coworking_Booking.Api", Version = "v1" });
+                    info: new OpenApiInfo { Title = "NajotBooking   .Api", Version = "v1" });
             });
         }
 
@@ -58,6 +59,20 @@ namespace NajotBooking.Api
 
             app.UseEndpoints(endpoints =>
                 endpoints.MapControllers());
+        }
+
+        private static void RegisterBrokers(IServiceCollection services)
+        {
+            services.AddTransient<IStorageBroker, StorageBroker>();
+            services.AddTransient<ILoggingBroker, LoggingBroker>();
+            services.AddTransient<IDateTimeBroker, DateTimeBroker>();
+        }
+
+        private static void AddFoundationServices(IServiceCollection services)
+        {
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IOrderService, OrderService>();
+            services.AddTransient<ISeatService, SeatService>();
         }
     }
 }
