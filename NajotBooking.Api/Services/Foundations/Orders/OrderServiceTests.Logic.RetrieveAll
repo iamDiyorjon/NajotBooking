@@ -1,6 +1,0 @@
-﻿namespace NajotBooking.Api.Services.Foundations.Orders
-{
-    public class OrderServiceTests
-    {
-    }
-}
