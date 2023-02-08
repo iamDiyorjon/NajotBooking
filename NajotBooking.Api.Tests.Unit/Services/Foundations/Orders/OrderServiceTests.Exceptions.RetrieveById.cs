@@ -55,5 +55,45 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRetrieveByIdIfServiceErrorOccursAndLogItAsync()
+        {
+            //given
+            Guid someOrderId = Guid.NewGuid();
+            var serviceException = new Exception();
+
+            var failedOrderServiceException =
+                new FailedOrderServiceException(serviceException);
+
+            var expectedOrderServiceException =
+                new OrderServiceException(failedOrderServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectOrderByIdAsync(someOrderId))
+                    .ThrowsAsync(serviceException);
+
+            //when
+            ValueTask<Order> retrieveOrderByIdTask =
+                this.orderService.RetrieveOrderByIdAsync(someOrderId);
+
+            OrderServiceException actualOrderServiceException =
+                 await Assert.ThrowsAsync<OrderServiceException>(
+                     retrieveOrderByIdTask.AsTask);
+
+            //then
+            actualOrderServiceException.Should()
+                .BeEquivalentTo(expectedOrderServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectOrderByIdAsync(It.IsAny<Guid>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExpressionAs(
+                    expectedOrderServiceException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
