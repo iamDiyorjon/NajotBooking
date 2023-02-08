@@ -31,8 +31,13 @@ namespace NajotBooking.Api.Services.Foundations.Orders
             return await this.storageBroker.InsertOrderAsync(order);
         });
 
-        public async ValueTask<Order> RetrieveOrderByIdAsync(Guid orderId) =>
-            await this.storageBroker.SelectOrderByIdAsync(orderId);
+        public ValueTask<Order> RetrieveOrderByIdAsync(Guid orderId) =>
+        TryCatch(async () =>
+        {
+            ValidationOrderId(orderId);
+
+            return await this.storageBroker.SelectOrderByIdAsync(orderId);
+        });
 
         public IQueryable<Order> RetrieveAllOrders() =>
         TryCatch(() => this.storageBroker.SelectAllOrders());
