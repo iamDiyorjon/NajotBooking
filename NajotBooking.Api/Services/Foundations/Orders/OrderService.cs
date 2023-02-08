@@ -22,6 +22,7 @@ namespace NajotBooking.Api.Services.Foundations.Orders
             this.storageBroker = storageBroker;
             this.loggingBroker = loggingBroker;
         }
+
         public ValueTask<Order> AddOrderAsync(Order order) =>
         TryCatch(async () =>
         {
@@ -29,9 +30,21 @@ namespace NajotBooking.Api.Services.Foundations.Orders
 
             return await this.storageBroker.InsertOrderAsync(order);
         });
-
         public IQueryable<Order> RetrieveAllOrders() =>
         TryCatch(() => this.storageBroker.SelectAllOrders());
+
+        public ValueTask<Order> RetrieveOrderByIdAsync(Guid orderId) =>
+        TryCatch(async () =>
+        {
+            ValidationOrderId(orderId);
+
+            Order maybeOrder =
+                await this.storageBroker.SelectOrderByIdAsync(orderId);
+
+            ValidateStorageOrderExists(maybeOrder, orderId);
+
+            return maybeOrder;
+        });
 
         public ValueTask<Order> RemoveOrderByIdAsync(Guid orderId) =>
         TryCatch(async () =>
