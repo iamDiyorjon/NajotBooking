@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.Sockets;
 using System.Runtime.Serialization;
 using Microsoft.Data.SqlClient;
 using Moq;
@@ -92,6 +93,21 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
 
         private static SqlException CreateSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
+
+        private static int GetRandomNegativeNumber() =>
+            -1 * new IntRange(min: 2, max: 10).GetValue();
+
+        private static Seat CreateRandomModifySeat(DateTimeOffset dates)
+        {
+            int randomDaysAgo = GetRandomNegativeNumber();
+            Seat randomSeat= CreateRandomSeat(dates);
+
+            randomSeat.CreatedDate =
+                randomSeat.CreatedDate.AddDays(randomDaysAgo);
+
+            return randomSeat;
+        }
+
 
         private static Filler<Seat> CreateSeatFiller(DateTimeOffset dates)
         {
