@@ -36,7 +36,12 @@ namespace NajotBooking.Api.Services.Foundations.Orders
         {
             ValidationOrderId(orderId);
 
-            return await this.storageBroker.SelectOrderByIdAsync(orderId);
+            Order maybeOrder =
+                await this.storageBroker.SelectOrderByIdAsync(orderId);
+
+            ValidateStorageOrderExists(maybeOrder, orderId);
+
+            return maybeOrder;
         });
 
         public IQueryable<Order> RetrieveAllOrders() =>
