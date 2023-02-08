@@ -51,5 +51,45 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowNotFoundExceptionOnRetrieveByIdIfOrderIsNotFoundAndLogItAsync()
+        {
+            //given
+            Guid someOrderId = Guid.NewGuid();
+            Order noOrder = null;
+
+            var notFoundOrderException =
+                new NotFoundOrderException(someOrderId);
+
+            var expectedOrderValidationException =
+                new OrderValidationException(notFoundOrderException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectOrderByIdAsync(It.IsAny<Guid>()))
+                    .ReturnsAsync(noOrder);
+
+            //when
+            ValueTask<Order> retrieveOrderByIdTask =
+                this.orderService.RetrieveOrderByIdAsync(someOrderId);
+
+            OrderValidationException actualOrderValidationException =
+                await Assert.ThrowsAsync<OrderValidationException>(
+                    retrieveOrderByIdTask.AsTask);
+
+            // then
+            actualOrderValidationException.Should()
+                .BeEquivalentTo(expectedOrderValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectOrderByIdAsync(It.IsAny<Guid>()), Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExpressionAs(
+                    expectedOrderValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
