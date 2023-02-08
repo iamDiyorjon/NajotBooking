@@ -13,8 +13,8 @@ namespace NajotBooking.Api.Services.Foundations.Orders
     public interface IOrderService
     {
         ValueTask<Order> AddOrderAsync(Order order);
-        ValueTask<Order> RetrieveOrderByIdAsync(Guid orderId);
         IQueryable<Order> RetrieveAllOrders();
+        ValueTask<Order> RetrieveOrderByIdAsync(Guid orderId);
         ValueTask<Order> RemoveOrderByIdAsync(Guid orderId);
     }
 }
