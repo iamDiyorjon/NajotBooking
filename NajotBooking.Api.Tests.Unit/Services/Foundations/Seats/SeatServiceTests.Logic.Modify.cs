@@ -44,10 +44,10 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
             actualSeat.Should().BeEquivalentTo(expectedSeat);
 
             this.dateTimeBrokerMock.Verify(broker =>
-                broker.GetCurrentDateTime(), Times.Once);
+                broker.GetCurrentDateTime(), Times.Never);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectSeatByIdAsync(seatId), Times.Once);
+                broker.SelectSeatByIdAsync(seatId), Times.Never);
 
             this.storageBrokerMock.Verify(broker =>
                 broker.UpdateSeatAsync(inputSeat), Times.Once);
