@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
@@ -90,6 +91,47 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
                     expectedSeatDependencyValidationException))), Times.Once);
             this.storageBrokerMock.Verify(broker =>
                 broker.DeleteSeatAsync(It.IsAny<Seat>()), Times.Never);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRemoveIfExceptionOccursAndLogItAsync()
+        {
+            // given
+            Guid someSeatId = Guid.NewGuid();
+            var serviceException = new Exception();
+
+            var failedSeatServiceException =
+                new FailedSeatServiceException(serviceException);
+
+            var expectedSeatServiceException =
+                new SeatServiceException(failedSeatServiceException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectSeatByIdAsync(It.IsAny<Guid>()))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<Seat> removeSeatByIdTask =
+                this.seatService.RemoveSeatByIdAsync(someSeatId);
+
+            SeatServiceException actualSeatServiceException =
+                await Assert.ThrowsAsync<SeatServiceException>(
+                    removeSeatByIdTask.AsTask);
+
+            // then
+            actualSeatServiceException.Should().BeEquivalentTo(
+                expectedSeatServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectSeatByIdAsync(It.IsAny<Guid>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedSeatServiceException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
