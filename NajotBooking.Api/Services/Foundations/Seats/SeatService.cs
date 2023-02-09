@@ -69,6 +69,8 @@ namespace NajotBooking.Api.Services.Foundations.Seats
                 Seat maybeSeat =
                     await this.storageBroker.SelectSeatByIdAsync(seatId);
 
+                ValidateStorageSeatExists(maybeSeat, seatId);
+
                 return await this.storageBroker.DeleteSeatAsync(maybeSeat);
             });
     }
