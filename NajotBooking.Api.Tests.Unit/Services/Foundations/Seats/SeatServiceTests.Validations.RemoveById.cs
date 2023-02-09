@@ -47,5 +47,50 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowNotFoundExceptionOnRemoveIfSeatIsNotFoundAndLogItAsync()
+        {
+            //given
+            Guid randomSeatId = Guid.NewGuid();
+            Guid inputSeatId = randomSeatId;
+            Seat noSeat = null;
+
+            var notFoundSeatException =
+                new NotFoundSeatException(inputSeatId);
+
+            var expectedSeatValidationException =
+                new SeatValidationException(notFoundSeatException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectSeatByIdAsync(It.IsAny<Guid>()))
+                    .ReturnsAsync(noSeat);
+
+            //when
+            ValueTask<Seat> removeSeatByIdTask =
+                this.seatService.RemoveSeatByIdAsync(inputSeatId);
+
+            SeatValidationException actualSeatValidationException =
+                await Assert.ThrowsAsync<SeatValidationException>(
+                    removeSeatByIdTask.AsTask);
+
+            //then
+            actualSeatValidationException.Should()
+                .BeEquivalentTo(expectedSeatValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectSeatByIdAsync(It.IsAny<Guid>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedSeatValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+              broker.DeleteSeatAsync(It.IsAny<Seat>()), Times.Never);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
