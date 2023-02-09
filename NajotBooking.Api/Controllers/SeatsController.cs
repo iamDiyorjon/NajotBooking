@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NajotBooking.Api.Models.Seats;
@@ -9,8 +10,8 @@ using RESTFulSense.Controllers;
 
 namespace NajotBooking.Api.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class SeatsController : RESTFulController
     {
         private readonly ISeatService seatService;
@@ -128,8 +129,42 @@ namespace NajotBooking.Api.Controllers
             }
         }
 
-        [HttpDelete]
-        public async ValueTask<ActionResult<Seat>> DeleteSeatAsync(Guid seatId) =>
-            await this.seatService.RemoveSeatByIdAsync(seatId);
+        [HttpDelete("{seatId}")]
+        public async ValueTask<ActionResult<Seat>> DeleteSeatByIdAsync(Guid seatId)
+        {
+            try
+            {
+                Seat deletedSeat =
+                    await this.seatService.RemoveSeatByIdAsync(seatId);
+
+                return Ok(deletedSeat);
+            }
+            catch (SeatValidationException seatValidationException)
+                when (seatValidationException.InnerException is NotFoundSeatException)
+            {
+                return NotFound(seatValidationException.InnerException);
+            }
+            catch (SeatValidationException seatValidationException)
+            {
+                return BadRequest(seatValidationException.InnerException);
+            }
+            catch (SeatDependencyValidationException seatDependencyValidationException)
+                when (seatDependencyValidationException.InnerException is LockedSeatException)
+            {
+                return Locked(seatDependencyValidationException.InnerException);
+            }
+            catch (SeatDependencyValidationException seatDependencyValidationException)
+            {
+                return BadRequest(seatDependencyValidationException.InnerException);
+            }
+            catch (SeatDependencyException seatDependencyException)
+            {
+                return InternalServerError(seatDependencyException.InnerException);
+            }
+            catch (SeatServiceException seatServiceException)
+            {
+                return InternalServerError(seatServiceException.InnerException);
+            }
+        }
     }
 }

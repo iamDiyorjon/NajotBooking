@@ -9,8 +9,8 @@ using RESTFulSense.Controllers;
 
 namespace NajotBooking.Api.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class UsersController : RESTFulController
     {
         private readonly IUserService userService;
