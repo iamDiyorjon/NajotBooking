@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using NajotBooking.Api.Models.Seats;
 using NajotBooking.Api.Models.Seats.Exceptions;
@@ -44,6 +45,51 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
                     expectedSeatDependencyException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationOnRemoveIfDatabaseUpdateConcurrencyErrorOccursAndLogItAsync()
+        {
+            // given
+            Guid someSeatId = Guid.NewGuid();
+
+            var databaseUpdateConcurrencyException =
+                new DbUpdateConcurrencyException();
+
+            var lockedSeatException =
+                new LockedSeatException(databaseUpdateConcurrencyException);
+
+            var expectedSeatDependencyValidationException =
+                new SeatDependencyValidationException(lockedSeatException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectSeatByIdAsync(It.IsAny<Guid>()))
+                    .ThrowsAsync(databaseUpdateConcurrencyException);
+
+            // when
+            ValueTask<Seat> removeSeatByIdTask =
+                this.seatService.RemoveSeatByIdAsync(someSeatId);
+
+            SeatDependencyValidationException actualSeatDependencyValidationException =
+                await Assert.ThrowsAsync<SeatDependencyValidationException>(
+                    removeSeatByIdTask.AsTask);
+
+            // then
+            actualSeatDependencyValidationException.Should().BeEquivalentTo(
+                expectedSeatDependencyValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectSeatByIdAsync(It.IsAny<Guid>()), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedSeatDependencyValidationException))), Times.Once);
+            this.storageBrokerMock.Verify(broker =>
+                broker.DeleteSeatAsync(It.IsAny<Seat>()), Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
