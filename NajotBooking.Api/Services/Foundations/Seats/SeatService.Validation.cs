@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Data;
+using System.Net.Sockets;
+using System.Reflection.Metadata;
 using NajotBooking.Api.Models.Seats;
 using NajotBooking.Api.Models.Seats.Exceptions;
-using NajotBooking.Api.Models.Seats;
-using System.Net.Sockets;
 
 namespace NajotBooking.Api.Services.Foundations.Seats
 {
@@ -27,6 +28,54 @@ namespace NajotBooking.Api.Services.Foundations.Seats
                         secondDateName: nameof(Seat.UpdatedDate)),
 
                 Parameter: nameof(Seat.CreatedDate)));
+        }
+
+        private void ValidateAginstStorageSeatOnModify(Seat inputSeat, Seat storageSeat)
+        {
+            ValidateStorageSeat(storageSeat, inputSeat.Id);
+
+            Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputSeat.CreatedDate,
+                    secondDate: storageSeat.CreatedDate,
+                    secondDateName: nameof(Seat.CreatedDate)),
+                Parameter: nameof(Seat.CreatedDate)),
+
+                (Rule: IsSame(
+                    firstDate: inputSeat.UpdatedDate,
+                    secondDate: storageSeat.UpdatedDate,
+                    secondDateName: nameof(Seat.UpdatedDate)),
+                Parameter: nameof(Seat.UpdatedDate)));
+        }
+
+        private void ValidateSeatOnModify(Seat seat)
+        {
+            ValidateSeatNotNull(seat);
+
+            Validate(
+                (Rule: IsInvalid(seat.Id), Parameter: nameof(Seat.Id)),
+                (Rule: IsInvalid(seat.Number), Parameter: nameof(Seat.Number)),
+                (Rule: IsInvalid(seat.Branch), Parameter: nameof(Seat.Branch)),
+                (Rule: IsInvalid(seat.Floor), Parameter: nameof(Seat.Floor)),
+                (Rule: IsInvalid(seat.Price), Parameter: nameof(Seat.Price)),
+                (Rule: IsInvalid(seat.CreatedDate), Parameter: nameof(Seat.CreatedDate)),
+                (Rule: IsInvalid(seat.UpdatedDate), Parameter: nameof(Seat.UpdatedDate)),
+                (Rule: IsNotRecent(seat.UpdatedDate), Parameter: nameof(Seat.UpdatedDate)),
+
+                (Rule: IsSame(
+                        firstDate: seat.UpdatedDate,
+                        secondDate: seat.CreatedDate,
+                        secondDateName: nameof(Seat.CreatedDate)),
+
+                Parameter: nameof(Seat.UpdatedDate)));
+        }
+
+        private static void ValidateStorageSeatExists(Seat maybeSeat, Guid seatId)
+        {
+            if (maybeSeat is null)
+            {
+                throw new NotFoundSeatException(seatId);
+            }
         }
 
         private void ValidateSeatId(Guid seatId) =>

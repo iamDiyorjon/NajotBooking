@@ -37,7 +37,7 @@ namespace NajotBooking.Api
             {
                 config.SwaggerDoc(
                     name: "v1",
-                    info: new OpenApiInfo { Title = "NajotBooking   .Api", Version = "v1" });
+                    info: new OpenApiInfo { Title = "NajotBooking.Api", Version = "v1" });
             });
         }
 

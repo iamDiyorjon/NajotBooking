@@ -53,6 +53,12 @@ namespace NajotBooking.Api.Services.Foundations.Seats
 
                 throw CreateAndDependencyValidationException(lockedTickedException);
             }
+            catch (DbUpdateException databaseUpdateException)
+            {
+                var failedSeatStorageException = new FailedSeatStorageException(databaseUpdateException);
+
+                throw CreateAndLogDependencyException(failedSeatStorageException);
+            }
             catch (Exception serviceException)
             {
                 var failedSeatServiceException =
@@ -83,6 +89,14 @@ namespace NajotBooking.Api.Services.Foundations.Seats
 
                 throw CreateAndLogServiceException(failedSeatServiceException);
             }
+        }
+
+        private SeatDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var seatDependencyException = new SeatDependencyException(exception);
+            this.loggingBroker.LogError(seatDependencyException);
+
+            return seatDependencyException;
         }
 
         private SeatValidationException CreateAndLogValidationException(Xeption exception)
