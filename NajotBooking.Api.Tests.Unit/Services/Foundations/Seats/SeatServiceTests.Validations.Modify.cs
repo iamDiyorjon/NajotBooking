@@ -178,7 +178,7 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
 
             invalidSeatException.AddData(
                 key: nameof(Seat.UpdatedDate),
-                values: "Date is not recent");
+                values: "Date is not recent.");
 
             var expectedSeatValidationException =
                 new SeatValidationException(invalidSeatException);
