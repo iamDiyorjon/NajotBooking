@@ -32,9 +32,6 @@ namespace NajotBooking.Api.Services.Foundations.Seats
                 return await this.storageBroker.InsertSeatAsync(seat);
             });
 
-        public ValueTask<Seat> RemoveSeat(Seat seat) =>
-            this.storageBroker.DeleteSeatAsync(seat);
-
         public IQueryable<Seat> RetrieveAllSeat() =>
             TryCatch(() => this.storageBroker.SelectAllSeats());
 
@@ -43,9 +40,9 @@ namespace NajotBooking.Api.Services.Foundations.Seats
             {
                 ValidateSeatId(seatId);
 
-                Seat maybeSeat = 
+                Seat maybeSeat =
                     await this.storageBroker.SelectSeatByIdAsync(seatId);
-                
+
                 ValidateStorageSeat(maybeSeat, seatId);
 
                 return maybeSeat;
@@ -54,16 +51,27 @@ namespace NajotBooking.Api.Services.Foundations.Seats
         public ValueTask<Seat> ModifySeatAsync(Seat seat) =>
             TryCatch(async () =>
             {
-                ValidateSeatOnModify(seat); 
+                ValidateSeatOnModify(seat);
 
-                var maybeHost = 
+                var maybeSeat =
                     await this.storageBroker.SelectSeatByIdAsync(seat.Id);
 
-                ValidateAginstStorageSeatOnModify(inputSeat: seat, storageSeat: maybeHost);
+                ValidateAginstStorageSeatOnModify(inputSeat: seat, storageSeat: maybeSeat);
 
                 return await this.storageBroker.UpdateSeatAsync(seat);
             });
-            
 
+        public ValueTask<Seat> RemoveSeatByIdAsync(Guid seatId) =>
+            TryCatch(async () =>
+            {
+                ValidateSeatId(seatId);
+
+                Seat maybeSeat =
+                    await this.storageBroker.SelectSeatByIdAsync(seatId);
+
+                ValidateStorageSeatExists(maybeSeat, seatId);
+
+                return await this.storageBroker.DeleteSeatAsync(maybeSeat);
+            });
     }
 }

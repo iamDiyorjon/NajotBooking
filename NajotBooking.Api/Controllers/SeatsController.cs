@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Net.Sockets;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NajotBooking.Api.Models.Seats;
@@ -130,7 +129,7 @@ namespace NajotBooking.Api.Controllers
         }
 
         [HttpDelete]
-        public async ValueTask<ActionResult<Seat>> DeleteSeatAsync(Seat seat) =>
-            await this.seatService.RemoveSeat(seat);
+        public async ValueTask<ActionResult<Seat>> DeleteSeatAsync(Guid seatId) =>
+            await this.seatService.RemoveSeatByIdAsync(seatId);
     }
 }
