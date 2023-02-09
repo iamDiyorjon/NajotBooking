@@ -161,5 +161,55 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnModifyIfDatabaseUpdateErrorOccursAndLogItAsync()
+        {
+            // given
+            int minuteInPast = GetRandomNegativeNumber();
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Seat randomSeat = CreateRandomSeat(randomDateTime);
+            Seat someSeat = randomSeat;
+            someSeat.CreatedDate = randomDateTime.AddMinutes(minuteInPast);
+            var serviceException = new Exception();
+
+            var failedSeatException =
+                new FailedSeatServiceException(serviceException);
+
+            var expectedSeatServiceException =
+                new SeatServiceException(failedSeatException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectSeatByIdAsync(someSeat.Id)).ThrowsAsync(serviceException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            // when
+            ValueTask<Seat> modifySeatTask =
+                this.seatService.ModifySeatAsync(someSeat);
+
+            SeatServiceException actualSeatServiceException =
+                await Assert.ThrowsAsync<SeatServiceException>(
+                    modifySeatTask.AsTask);
+
+            // then
+            actualSeatServiceException.Should().BeEquivalentTo(
+                expectedSeatServiceException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectSeatByIdAsync(someSeat.Id), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedSeatServiceException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
