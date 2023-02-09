@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NajotBooking.Api.Models.Seats;
@@ -95,8 +96,38 @@ namespace NajotBooking.Api.Controllers
         }
 
         [HttpPut]
-        public async ValueTask<ActionResult<Seat>> PutSeatAsync(Seat seat) =>
-            await this.seatService.ModifySeatAsync(seat);
+        public async ValueTask<ActionResult<Seat>> PutSeatAsync(Seat seat)
+        {
+            try
+            {
+                Seat modifiedSeat =
+                    await this.seatService.ModifySeatAsync(seat);
+
+                return Ok(modifiedSeat);
+            }
+            catch (SeatValidationException seatValidationException)
+                when (seatValidationException.InnerException is NotFoundSeatException)
+            {
+                return NotFound(seatValidationException.InnerException);
+            }
+            catch (SeatValidationException seatValidationException)
+            {
+                return BadRequest(seatValidationException.InnerException);
+            }
+            catch (SeatDependencyValidationException seatDependencyValidationException)
+                when (seatDependencyValidationException.InnerException is AlreadyExistsSeatException)
+            {
+                return Conflict(seatDependencyValidationException.InnerException);
+            }
+            catch (SeatDependencyException seatDependencyException)
+            {
+                return InternalServerError(seatDependencyException.InnerException);
+            }
+            catch (SeatServiceException seatServiceException)
+            {
+                return InternalServerError(seatServiceException.InnerException);
+            }
+        }
 
         [HttpDelete]
         public async ValueTask<ActionResult<Seat>> DeleteSeatAsync(Seat seat) =>
