@@ -11,6 +11,6 @@ namespace NajotBooking.Api.Services.Foundations.Seats
         ValueTask<Seat> RetrieveSeatByIdAsync(Guid seatId);
         IQueryable<Seat> RetrieveAllSeat();
         ValueTask<Seat> ModifySeatAsync(Seat seat);
-        ValueTask<Seat> RemoveSeat(Seat seat);
+        ValueTask<Seat> RemoveSeatByIdAsyncat(Seat seat);
     }
 }
