@@ -84,9 +84,13 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
 
             invalidSeatException.AddData(
                 key: nameof(Seat.UpdatedDate),
-                "Value is required",
-                "Date is not recent",
-                $"Date is the same as {nameof(Seat.CreatedDate)}");
+                    values: new[]
+                    {
+                        "Value is required",
+                        "Date is not recent",
+                        $"Date is the same as {nameof(Seat.CreatedDate)}"
+                    }
+                );
 
             var expectedSeatValidationException =
                 new SeatValidationException(invalidSeatException);

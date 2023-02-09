@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using System.Reflection.Metadata;
 using NajotBooking.Api.Models.Seats;
 using NajotBooking.Api.Models.Seats.Exceptions;
 
@@ -30,6 +32,23 @@ namespace NajotBooking.Api.Services.Foundations.Seats
         private void ValidateSeatOnModify(Seat seat)
         {
             ValidateSeatNotNull(seat);
+
+            Validate(
+                (Rule: IsInvalid(seat.Id), Parameter: nameof(Seat.Id)),
+                (Rule: IsInvalid(seat.Number), Parameter: nameof(Seat.Number)),
+                (Rule: IsInvalid(seat.Branch), Parameter: nameof(Seat.Branch)),
+                (Rule: IsInvalid(seat.Floor), Parameter: nameof(Seat.Floor)),
+                (Rule: IsInvalid(seat.Price), Parameter: nameof(Seat.Price)),
+                (Rule: IsInvalid(seat.CreatedDate), Parameter: nameof(Seat.CreatedDate)),
+                (Rule: IsInvalid(seat.UpdatedDate), Parameter: nameof(Seat.UpdatedDate)),
+                (Rule: IsNotRecent(seat.UpdatedDate), Parameter: nameof(Seat.UpdatedDate)),
+
+                (Rule: IsSame(
+                        firstDate: seat.UpdatedDate,
+                        secondDate: seat.CreatedDate,
+                        secondDateName: nameof(Seat.CreatedDate)),
+
+                Parameter: nameof(Seat.UpdatedDate)));
         }
 
         private void ValidateSeatId(Guid seatId) =>
