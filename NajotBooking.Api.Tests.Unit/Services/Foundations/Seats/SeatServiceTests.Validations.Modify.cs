@@ -347,13 +347,13 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
 
             this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTime(), Times.Once);
+            
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectSeatByIdAsync(seatId), Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedSeatValidationException))), Times.Once);
-
-            this.storageBrokerMock.Verify(broker =>
-                broker.SelectSeatByIdAsync(seatId), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
