@@ -309,5 +309,55 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfStorageUpdatedDateSameAsUpdatedDateAndLogItAsync()
+        {
+            // given
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Seat randomSeat = CreateRandomModifySeat(randomDateTime);
+            Seat invalidSeat = randomSeat;
+            Seat storageSeat = randomSeat.DeepClone();
+            invalidSeat.UpdatedDate = storageSeat.UpdatedDate;
+            Guid seatId = invalidSeat.Id;
+            var invalidSeatException = new InvalidSeatException();
+
+            invalidSeatException.AddData(
+                key: nameof(Seat.UpdatedDate),
+                values: $"Date is the same as {nameof(Seat.UpdatedDate)}");
+
+            var expectedSeatValidationException =
+                new SeatValidationException(invalidSeatException);
+
+            this.storageBrokerMock.Setup(broker =>
+               broker.SelectSeatByIdAsync(invalidSeat.Id)).ReturnsAsync(storageSeat);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            // when
+            ValueTask<Seat> modifySeatTask =
+                this.seatService.ModifySeatAsync(invalidSeat);
+
+            SeatValidationException actualSeatValidationException =
+               await Assert.ThrowsAsync<SeatValidationException>(modifySeatTask.AsTask);
+
+            // then
+            actualSeatValidationException.Should().BeEquivalentTo(expectedSeatValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedSeatValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectSeatByIdAsync(seatId), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
