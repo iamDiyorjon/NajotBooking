@@ -178,7 +178,7 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
 
             invalidSeatException.AddData(
                 key: nameof(Seat.UpdatedDate),
-                values: "Date is not recent.");
+                values: "Date is not recent");
 
             var expectedSeatValidationException =
                 new SeatValidationException(invalidSeatException);
@@ -208,6 +208,53 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfSeatDoesNotExistAndLogItAsync()
+        {
+            //given
+            int randomNegativeMInutes = GetRandomNegativeNumber();
+            DateTimeOffset dateTime = GetRandomDateTime();
+            Seat randomSeat = CreateRandomSeat(dateTime);
+            Seat nonExistSeat = randomSeat;
+            nonExistSeat.CreatedDate = dateTime.AddMinutes(randomNegativeMInutes);
+            Seat nullSeat = null;
+
+            var notFoundSeatException =
+                new NotFoundSeatException(nonExistSeat.Id);
+
+            var expectedSeatValidationException = new
+                SeatValidationException(notFoundSeatException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectSeatByIdAsync(nonExistSeat.Id)).ReturnsAsync(nullSeat);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(dateTime);
+
+            //when
+            ValueTask<Seat> modifySeatTask =
+                this.seatService.ModifySeatAsync(nonExistSeat);
+
+            SeatValidationException actualSeatValidationException =
+                await Assert.ThrowsAsync<SeatValidationException>(modifySeatTask.AsTask);
+
+            //then
+            actualSeatValidationException.Should().BeEquivalentTo(expectedSeatValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectSeatByIdAsync(nonExistSeat.Id), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(expectedSeatValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
