@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Net.Sockets;
 using System.Reflection.Metadata;
 using NajotBooking.Api.Models.Seats;
 using NajotBooking.Api.Models.Seats.Exceptions;
@@ -27,6 +28,24 @@ namespace NajotBooking.Api.Services.Foundations.Seats
                         secondDateName: nameof(Seat.UpdatedDate)),
 
                 Parameter: nameof(Seat.CreatedDate)));
+        }
+
+        private void ValidateAginstStorageSeatOnModify(Seat inputSeat, Seat storageSeat)
+        {
+            ValidateStorageSeat(storageSeat, inputSeat.Id);
+
+            Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputSeat.CreatedDate,
+                    secondDate: storageSeat.CreatedDate,
+                    secondDateName: nameof(Seat.CreatedDate)),
+                Parameter: nameof(Seat.CreatedDate)),
+
+                (Rule: IsSame(
+                    firstDate: inputSeat.UpdatedDate,
+                    secondDate: storageSeat.UpdatedDate,
+                    secondDateName: nameof(Seat.UpdatedDate)),
+                Parameter: nameof(Seat.UpdatedDate)));
         }
 
         private void ValidateSeatOnModify(Seat seat)
