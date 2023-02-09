@@ -2,6 +2,7 @@
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Force.DeepCloner;
 using Moq;
 using NajotBooking.Api.Models.Seats;
 using NajotBooking.Api.Models.Seats.Exceptions;
@@ -251,6 +252,58 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(expectedSeatValidationException))), Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfStorageCreatedDateNotSameAsCreatedDateAndLogItAsync()
+        {
+            int randomNumber = GetRandomNegativeNumber();
+            int randomMinutes = randomNumber;
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Seat randomSeat = CreateRandomModifySeat(randomDateTime);
+            Seat invalidSeat = randomSeat.DeepClone();
+            Seat storageSeat = invalidSeat.DeepClone();
+            storageSeat.CreatedDate = storageSeat.CreatedDate.AddMinutes(randomMinutes);
+            storageSeat.UpdatedDate = storageSeat.UpdatedDate.AddMinutes(randomMinutes);
+            var invalidSeatException = new InvalidSeatException();
+            Guid seatId = invalidSeat.Id;
+
+            invalidSeatException.AddData(
+                key: nameof(Seat.CreatedDate),
+                values: $"Date is not the same as {nameof(Seat.CreatedDate)}");
+
+            var expectedSeatValidationException =
+                new SeatValidationException(invalidSeatException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectSeatByIdAsync(seatId)).ReturnsAsync(storageSeat);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            // when
+            ValueTask<Seat> modifySeatTask =
+                this.seatService.ModifySeatAsync(invalidSeat);
+
+            SeatValidationException actualSeatValidationException =
+                await Assert.ThrowsAsync<SeatValidationException>(modifySeatTask.AsTask);
+
+            // then
+            actualSeatValidationException.Should().BeEquivalentTo(expectedSeatValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectSeatByIdAsync(invalidSeat.Id), Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+               broker.LogError(It.Is(SameExceptionAs(
+                   expectedSeatValidationException))), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
