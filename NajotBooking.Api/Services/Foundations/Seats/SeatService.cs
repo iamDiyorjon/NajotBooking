@@ -61,11 +61,15 @@ namespace NajotBooking.Api.Services.Foundations.Seats
                 return await this.storageBroker.UpdateSeatAsync(seat);
             });
 
-        public async ValueTask<Seat> RemoveSeatByIdAsync(Guid seatId)
-        {
-            Seat maybeSeat = await this.storageBroker.SelectSeatByIdAsync(seatId);
+        public ValueTask<Seat> RemoveSeatByIdAsync(Guid seatId) =>
+            TryCatch(async () =>
+            {
+                ValidateSeatId(seatId);
 
-            return await this.storageBroker.DeleteSeatAsync(maybeSeat);
-        }
+                Seat maybeSeat =
+                    await this.storageBroker.SelectSeatByIdAsync(seatId);
+
+                return await this.storageBroker.DeleteSeatAsync(maybeSeat);
+            });
     }
 }
