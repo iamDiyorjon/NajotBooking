@@ -163,5 +163,51 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Seats
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(InvalidSeconds))]
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotRecentAndLogItAsync(
+           int invalidSeconds)
+        {
+            //given
+            DateTimeOffset randomDateTime = GetRandomDateTime();
+            Seat randomSeat = CreateRandomSeat(randomDateTime);
+            Seat inputSeat = randomSeat;
+            inputSeat.UpdatedDate = randomDateTime.AddSeconds(invalidSeconds);
+            var invalidSeatException = new InvalidSeatException();
+
+            invalidSeatException.AddData(
+                key: nameof(Seat.UpdatedDate),
+                values: "Date is not recent");
+
+            var expectedSeatValidationException =
+                new SeatValidationException(invalidSeatException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTime()).Returns(randomDateTime);
+
+            //when
+            ValueTask<Seat> modifySeatTask = this.seatService.ModifySeatAsync(inputSeat);
+
+            SeatValidationException actualSeatValidationException =
+                await Assert.ThrowsAsync<SeatValidationException>(modifySeatTask.AsTask);
+
+            //then
+            actualSeatValidationException.Should().BeEquivalentTo(
+                expectedSeatValidationException);
+
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTime(), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(expectedSeatValidationException))), Times.Once);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectSeatByIdAsync(It.IsAny<Guid>()), Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

@@ -51,6 +51,14 @@ namespace NajotBooking.Api.Services.Foundations.Seats
                 Parameter: nameof(Seat.UpdatedDate)));
         }
 
+        private static void ValidateStorageSeatExists(Seat maybeSeat, Guid seatId)
+        {
+            if (maybeSeat is null)
+            {
+                throw new NotFoundSeatException(seatId);
+            }
+        }
+
         private void ValidateSeatId(Guid seatId) =>
             Validate((Rule: IsInvalid(seatId), Parameter: nameof(Seat.Id)));
 
