@@ -54,7 +54,7 @@ namespace NajotBooking.Api.Services.Foundations.Seats
         public ValueTask<Seat> ModifySeatAsync(Seat seat) =>
             TryCatch(async () =>
             {
-                ValidateSeat(seat); 
+                ValidateSeatOnModify(seat); 
 
                 var maybeHost = 
                     await this.storageBroker.SelectSeatByIdAsync(seat.Id);
