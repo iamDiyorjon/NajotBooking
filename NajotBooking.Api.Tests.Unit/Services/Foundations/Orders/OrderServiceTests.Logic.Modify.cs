@@ -20,6 +20,8 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
         {
             //given
             Order randomOrder = CreateRandomOrder();
+            randomOrder.EndDate = GetAfterRandomDateTime(randomOrder.StartDate);
+            randomOrder.Duration = GetRandomNumber();
             Order inputOrder = randomOrder;
             Order storageOrder = inputOrder.DeepClone();
             Order updateOrder = inputOrder;
@@ -40,10 +42,10 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
             actualOrder.Should().BeEquivalentTo(expectedOrder);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.UpdateOrderAsync(inputOrder), Times.Once);
+                broker.SelectOrderByIdAsync(orderId), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectOrderByIdAsync(orderId), Times.Never);
+                broker.UpdateOrderAsync(inputOrder), Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
