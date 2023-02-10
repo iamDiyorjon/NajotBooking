@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NajotBooking.Api.Models.Orders;
@@ -60,6 +61,33 @@ namespace NajotBooking.Api.Controllers
             catch (OrderDependencyException orderDependencyException)
             {
                 return InternalServerError(orderDependencyException.InnerException);
+            }
+            catch (OrderServiceException orderServiceException)
+            {
+                return InternalServerError(orderServiceException.InnerException);
+            }
+        }
+
+        [HttpGet("{orderId}")]
+        public async ValueTask<ActionResult<Order>> GetOrderByIdAsync(Guid Id)
+        {
+            try
+            {
+                return await this.orderService.RetrieveOrderByIdAsync(Id);
+            }
+            catch (OrderDependencyException orderDependencyException)
+            {
+                return InternalServerError(orderDependencyException.InnerException);
+            }
+            catch (OrderValidationException orderValidationException)
+                when (orderValidationException.InnerException is InvalidOrderException)
+            {
+                return BadRequest(orderValidationException.InnerException);
+            }
+            catch (OrderValidationException orderValidationException)
+                when (orderValidationException.InnerException is NotFoundOrderException)
+            {
+                return NotFound(orderValidationException.InnerException);
             }
             catch (OrderServiceException orderServiceException)
             {
