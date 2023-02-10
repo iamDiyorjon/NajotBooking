@@ -94,5 +94,43 @@ namespace NajotBooking.Api.Controllers
                 return InternalServerError(orderServiceException.InnerException);
             }
         }
+
+        [HttpDelete("{orderId}")]
+        public async ValueTask<ActionResult<Order>> DeleteOrderByIdAsync(Guid Id)
+        {
+            try
+            {
+                Order deletedOrder =
+                    await this.orderService.RemoveOrderByIdAsync(Id);
+
+                return Ok(deletedOrder);
+            }
+            catch (OrderValidationException orderValidationException)
+                when (orderValidationException.InnerException is NotFoundOrderException)
+            {
+                return NotFound(orderValidationException.InnerException);
+            }
+            catch (OrderValidationException orderValidationException)
+            {
+                return BadRequest(orderValidationException.InnerException);
+            }
+            catch (OrderDependencyValidationException orderDependencyValidationException)
+                when (orderDependencyValidationException.InnerException is LockedOrderException)
+            {
+                return Locked(orderDependencyValidationException.InnerException);
+            }
+            catch (OrderDependencyValidationException orderDependencyValidationException)
+            {
+                return BadRequest(orderDependencyValidationException.InnerException);
+            }
+            catch (OrderDependencyException orderDependencyException)
+            {
+                return InternalServerError(orderDependencyException.InnerException);
+            }
+            catch (OrderServiceException orderServiceException)
+            {
+                return InternalServerError(orderServiceException.InnerException);
+            }
+        }
     }
 }
