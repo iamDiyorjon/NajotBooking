@@ -9,8 +9,8 @@ using RESTFulSense.Controllers;
 
 namespace NajotBooking.Api.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class UsersController : RESTFulController
     {
         private readonly IUserService userService;
@@ -33,9 +33,33 @@ namespace NajotBooking.Api.Controllers
                 return BadRequest(userValidationException.InnerException);
             }
             catch (UserDependencyValidationException userDependencyValidationException)
+                when (userDependencyValidationException.InnerException is InvalidUserReferenceException)
+            {
+                return FailedDependency(userDependencyValidationException.InnerException);
+            }
+            catch (UserDependencyValidationException userDependencyValidationException)
                when (userDependencyValidationException.InnerException is AlreadyExistsUserException)
             {
                 return Conflict(userDependencyValidationException.InnerException);
+            }
+            catch (UserDependencyException userDependencyException)
+            {
+                return InternalServerError(userDependencyException.InnerException);
+            }
+            catch (UserServiceException userServiceException)
+            {
+                return InternalServerError(userServiceException.InnerException);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult<IQueryable<User>> GetAllUsers()
+        {
+            try
+            {
+                IQueryable<User> users = this.userService.RetrieveAllUsers();
+
+                return Ok(users);
             }
             catch (UserDependencyException userDependencyException)
             {
@@ -48,7 +72,7 @@ namespace NajotBooking.Api.Controllers
         }
 
         [HttpGet("{userId}")]
-        public async ValueTask<ActionResult<User>> GetByIdAsync(Guid userId)
+        public async ValueTask<ActionResult<User>> GetUserByIdAsync(Guid userId)
         {
             try
             {
@@ -73,13 +97,6 @@ namespace NajotBooking.Api.Controllers
             {
                 return InternalServerError(userServiceException);
             }
-        }
-
-        [HttpGet]
-        public ActionResult<IQueryable<User>> GetAll()
-        {
-            IQueryable<User> users = this.userService.RetrieveAllUsers();
-            return Ok(users);
         }
 
         [HttpPut]
@@ -116,13 +133,13 @@ namespace NajotBooking.Api.Controllers
             }
         }
 
-        [HttpDelete]
-        public async ValueTask<ActionResult<User>> DeleteUserAsync(Guid userId)
+        [HttpDelete("{userId}")]
+        public async ValueTask<ActionResult<User>> DeleteUserByIdAsync(Guid userId)
         {
             try
             {
                 User deletedUser =
-                    await this.userService.RetrieveUserByIdAsync(userId);
+                    await this.userService.RemoveUserByIdAsync(userId);
 
                 return Ok(deletedUser);
             }
