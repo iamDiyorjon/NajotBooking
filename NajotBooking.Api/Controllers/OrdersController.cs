@@ -43,7 +43,7 @@ namespace NajotBooking.Api.Controllers
             }
             catch (OrderServiceException orderServiceException)
             {
-                return InternalServerError(orderServiceException);
+                return InternalServerError(orderServiceException.InnerException);
             }
         }
     }
