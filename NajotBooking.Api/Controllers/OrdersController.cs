@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NajotBooking.Api.Models.Orders;
 using NajotBooking.Api.Models.Orders.Exceptions;
@@ -36,6 +37,25 @@ namespace NajotBooking.Api.Controllers
             catch (OrderDependencyValidationException orderDependencyValidationException)
             {
                 return BadRequest(orderDependencyValidationException.InnerException);
+            }
+            catch (OrderDependencyException orderDependencyException)
+            {
+                return InternalServerError(orderDependencyException.InnerException);
+            }
+            catch (OrderServiceException orderServiceException)
+            {
+                return InternalServerError(orderServiceException.InnerException);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult<IQueryable<Order>> GetAllOrders()
+        {
+            try
+            {
+                IQueryable<Order> allOrders = this.orderService.RetrieveAllOrders();
+
+                return Ok(allOrders);
             }
             catch (OrderDependencyException orderDependencyException)
             {
