@@ -57,6 +57,13 @@ namespace NajotBooking.Api.Services.Foundations.Orders
 
                 throw CreateAndDependencyValidationException(lockedOrderException);
             }
+            catch (DbUpdateException databaseUpdateException)
+            {
+                var failedOrderStorageException =
+                    new FailedOrderStorageException(databaseUpdateException);
+
+                throw CreateAndLogDependencyException(failedOrderStorageException);
+            }
             catch (Exception exception)
             {
                 var failedOrderServiceException = new FailedOrderServiceException(exception);
@@ -71,13 +78,13 @@ namespace NajotBooking.Api.Services.Foundations.Orders
             {
                 return returningOrdersFunction();
             }
-            catch(SqlException sqlException) 
+            catch (SqlException sqlException)
             {
                 var failedOrderServiceException = new FailedOrderServiceException(sqlException);
-            
+
                 throw CreateAndLogCriticalDependencyException(failedOrderServiceException);
             }
-            catch(Exception serviceException)
+            catch (Exception serviceException)
             {
                 var failedOrderServiceException = new FailedOrderServiceException(serviceException);
 
@@ -116,6 +123,16 @@ namespace NajotBooking.Api.Services.Foundations.Orders
             this.loggingBroker.LogError(orderServiceException);
 
             return orderServiceException;
+        }
+
+        private OrderDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var orderDependencyException =
+                new OrderDependencyException(exception);
+
+            this.loggingBroker.LogError(orderDependencyException);
+
+            return orderDependencyException;
         }
     }
 }
