@@ -146,7 +146,7 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedOrderDependencyValidationException))), Times.Never);
+                    expectedOrderDependencyValidationException))), Times.Once);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
