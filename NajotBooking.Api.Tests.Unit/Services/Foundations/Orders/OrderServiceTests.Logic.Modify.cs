@@ -19,7 +19,6 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
         public async Task ShouldModifyOrderAsync()
         {
             //given
-            DateTimeOffset randomDateTime = GetRandomDateTime();
             Order randomOrder = CreateRandomOrder();
             Order inputOrder = randomOrder;
             Order storageOrder = inputOrder.DeepClone();
@@ -41,10 +40,10 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
             actualOrder.Should().BeEquivalentTo(expectedOrder);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.SelectOrderByIdAsync(orderId), Times.Once);
+                broker.UpdateOrderAsync(inputOrder), Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.UpdateOrderAsync(inputOrder), Times.Once);
+                broker.SelectOrderByIdAsync(orderId), Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
