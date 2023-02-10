@@ -95,6 +95,40 @@ namespace NajotBooking.Api.Controllers
             }
         }
 
+        [HttpPut]
+        public async ValueTask<ActionResult<Order>> PutOrderAsync(Order order)
+        {
+            try
+            {
+                Order modifiedOrder =
+                    await this.orderService.ModifyOrderAsync(order);
+
+                return base.Ok(modifiedOrder);
+            }
+            catch (OrderValidationException orderValidationException)
+                when (orderValidationException.InnerException is NotFoundOrderException)
+            {
+                return NotFound(orderValidationException.InnerException);
+            }
+            catch (OrderValidationException orderValidationException)
+            {
+                return BadRequest(orderValidationException.InnerException);
+            }
+            catch (OrderDependencyValidationException orderDependencyValidationException)
+                when (orderDependencyValidationException.InnerException is AlreadyExistsOrderException)
+            {
+                return Conflict(orderDependencyValidationException.InnerException);
+            }
+            catch (OrderDependencyException orderDependencyException)
+            {
+                return InternalServerError(orderDependencyException.InnerException);
+            }
+            catch (OrderServiceException orderServiceException)
+            {
+                return InternalServerError(orderServiceException.InnerException);
+            }
+        }
+
         [HttpDelete("{orderId}")]
         public async ValueTask<ActionResult<Order>> DeleteOrderByIdAsync(Guid Id)
         {
