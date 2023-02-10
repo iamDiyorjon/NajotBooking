@@ -46,6 +46,9 @@ namespace NajotBooking.Api.Services.Foundations.Orders
             return maybeOrder;
         });
 
+        public ValueTask<Order> ModifyOrderAsync(Order order) =>
+            throw new NotImplementedException();
+
         public ValueTask<Order> RemoveOrderByIdAsync(Guid orderId) =>
         TryCatch(async () =>
         {
