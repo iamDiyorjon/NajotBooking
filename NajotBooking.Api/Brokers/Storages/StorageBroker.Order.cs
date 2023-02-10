@@ -6,12 +6,15 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using NajotBooking.Api.Models.Orders;
 
 namespace NajotBooking.Api.Brokers.Storages
 {
     public partial class StorageBroker
     {
+        public DbSet<Order> Orders { get; set; }
+
         public async ValueTask<Order> InsertOrderAsync(Order order) =>
             await InsertAsync(order);
 
