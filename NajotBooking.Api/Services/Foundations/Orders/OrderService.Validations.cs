@@ -39,6 +39,11 @@ namespace NajotBooking.Api.Services.Foundations.Orders
             }
         }
 
+        private void ValidateOrderOnModify(Order order)
+        {
+            ValidateOrderNotNull(order);
+        }
+
         private static void ValidateStorageOrderExists(Order maybeOrder, Guid orderId)
         {
             if (maybeOrder is null)
