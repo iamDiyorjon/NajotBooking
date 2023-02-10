@@ -107,5 +107,49 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnModifyIfDatabaseUpdateConcurrencyErrorOccursAndLogItAsync()
+        {
+            // given
+            Order randomOrder = CreateRandomOrder();
+            randomOrder.EndDate = GetAfterRandomDateTime(randomOrder.StartDate);
+            randomOrder.Duration = GetRandomNumber();
+            Order someOrder = randomOrder;
+            Guid orderId = someOrder.Id;
+            var databaseUpdateConcurrencyException = new DbUpdateConcurrencyException();
+
+            var lockedOrderException =
+                new LockedOrderException(databaseUpdateConcurrencyException);
+
+            var expectedOrderDependencyValidationException =
+                new OrderDependencyValidationException(lockedOrderException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectOrderByIdAsync(orderId))
+                    .ThrowsAsync(databaseUpdateConcurrencyException);
+
+            // when
+            ValueTask<Order> modifyOrderTask =
+                this.orderService.ModifyOrderAsync(someOrder);
+
+            OrderDependencyValidationException actualOrderDependencyValidationException =
+                await Assert.ThrowsAsync<OrderDependencyValidationException>(
+                     modifyOrderTask.AsTask);
+
+            // then
+            actualOrderDependencyValidationException.Should().BeEquivalentTo(
+                expectedOrderDependencyValidationException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectOrderByIdAsync(orderId), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedOrderDependencyValidationException))), Times.Never);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
