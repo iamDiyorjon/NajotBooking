@@ -151,5 +151,49 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnModifyIfDatabaseUpdateErrorOccursAndLogItAsync()
+        {
+            // given
+            Order randomOrder = CreateRandomOrder();
+            randomOrder.EndDate = GetAfterRandomDateTime(randomOrder.StartDate);
+            randomOrder.Duration = GetRandomNumber();
+            Order someOrder = randomOrder;
+            Guid orderId = someOrder.Id;
+            var serviceException = new Exception();
+
+            var failedOrderException =
+                new FailedOrderServiceException(serviceException);
+
+            var expectedOrderServiceException =
+                new OrderServiceException(failedOrderException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.SelectOrderByIdAsync(orderId))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<Order> modifyOrderTask =
+                this.orderService.ModifyOrderAsync(someOrder);
+
+            OrderServiceException actualOrderServiceException =
+                await Assert.ThrowsAsync<OrderServiceException>(
+                     modifyOrderTask.AsTask);
+
+            // then
+            actualOrderServiceException.Should().BeEquivalentTo(
+                expectedOrderServiceException);
+
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectOrderByIdAsync(orderId), Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedOrderServiceException))), Times.Never);
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
