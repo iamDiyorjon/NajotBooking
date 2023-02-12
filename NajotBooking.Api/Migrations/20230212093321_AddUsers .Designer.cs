@@ -12,7 +12,7 @@ using NajotBooking.Api.Brokers.Storages;
 namespace NajotBooking.Api.Migrations
 {
     [DbContext(typeof(StorageBroker))]
-    [Migration("20230210142524_AddUsers")]
+    [Migration("20230212093321_AddUsers ")]
     partial class AddUsers
     {
         /// <inheritdoc />
@@ -24,6 +24,35 @@ namespace NajotBooking.Api.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("NajotBooking.Api.Models.Orders.Order", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("EndDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("SeatId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("StartDate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Orders");
+                });
 
             modelBuilder.Entity("NajotBooking.Api.Models.Seats.Seat", b =>
                 {

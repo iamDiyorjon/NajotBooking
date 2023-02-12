@@ -34,6 +34,9 @@ namespace NajotBooking.Api.Migrations
                     b.Property<DateTimeOffset>("EndDate")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<Guid>("SeatId")
                         .HasColumnType("uniqueidentifier");
 

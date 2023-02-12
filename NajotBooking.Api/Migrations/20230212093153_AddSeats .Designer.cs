@@ -12,8 +12,8 @@ using NajotBooking.Api.Brokers.Storages;
 namespace NajotBooking.Api.Migrations
 {
     [DbContext(typeof(StorageBroker))]
-    [Migration("20230210152341_AddOrders")]
-    partial class AddOrders
+    [Migration("20230212093153_AddSeats ")]
+    partial class AddSeats
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,6 +36,9 @@ namespace NajotBooking.Api.Migrations
 
                     b.Property<DateTimeOffset>("EndDate")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<Guid>("SeatId")
                         .HasColumnType("uniqueidentifier");
@@ -78,29 +81,6 @@ namespace NajotBooking.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Seats");
-                });
-
-            modelBuilder.Entity("NajotBooking.Api.Models.Users.User", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
                 });
 #pragma warning restore 612, 618
         }

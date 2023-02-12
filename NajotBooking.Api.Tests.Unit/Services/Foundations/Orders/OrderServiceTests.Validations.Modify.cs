@@ -69,6 +69,10 @@ namespace NajotBooking.Api.Tests.Unit.Services.Foundations.Orders
                 values: "Id is required");
 
             invalidOrderException.AddData(
+               key: nameof(Order.Price),
+               values: "Price is required");
+
+            invalidOrderException.AddData(
                 key: nameof(Order.StartDate),
 
                 values: new string[] {
