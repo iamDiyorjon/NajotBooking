@@ -39,6 +39,7 @@ namespace NajotBooking.Api
                     name: "v1",
                     info: new OpenApiInfo { Title = "NajotBooking.Api", Version = "v1" });
             });
+            services.AddApplicationInsightsTelemetry();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
