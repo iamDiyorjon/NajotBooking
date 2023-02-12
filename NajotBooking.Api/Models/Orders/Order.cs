@@ -12,6 +12,7 @@ namespace NajotBooking.Api.Models.Orders
         public Guid Id { get; set; }
         public Guid SeatId { get; set; }
         public Guid UserId { get; set; }
+        public decimal Price { get; set; }
         public DateTimeOffset StartDate { get; set; }
         public DateTimeOffset EndDate { get; set; }
         public int Duration { get; set; }

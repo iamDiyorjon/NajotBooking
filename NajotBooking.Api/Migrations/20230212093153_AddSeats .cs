@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace NajotBooking.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class AddUsers : Migration
+    public partial class AddSeats : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -27,21 +27,6 @@ namespace NajotBooking.Api.Migrations
                 {
                     table.PrimaryKey("PK_Seats", x => x.Id);
                 });
-
-            migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.Id);
-                });
         }
 
         /// <inheritdoc />
@@ -49,9 +34,6 @@ namespace NajotBooking.Api.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Seats");
-
-            migrationBuilder.DropTable(
-                name: "Users");
         }
     }
 }

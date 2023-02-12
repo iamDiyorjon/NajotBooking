@@ -19,6 +19,7 @@ namespace NajotBooking.Api.Services.Foundations.Orders
                 (Rule: IsInvalid(order.Id), Parameter: nameof(Order.Id)),
                 (Rule: IsInvalid(order.SeatId), Parameter: nameof(Order.SeatId)),
                 (Rule: IsInvalid(order.UserId), Parameter: nameof(Order.UserId)),
+                (Rule: IsInvalid(order.Price), Parametr: nameof(Order.Price)),
                 (Rule: IsInvalid(order.StartDate), Parameter: nameof(Order.StartDate)),
                 (Rule: IsInvalid(order.EndDate), Parameter: nameof(Order.EndDate)),
                 (Rule: IsInvalid(order.Duration), Parameter: nameof(Order.Duration)),
@@ -46,6 +47,7 @@ namespace NajotBooking.Api.Services.Foundations.Orders
             Validate(
                 (Rule: IsInvalid(order.SeatId), Parameter: nameof(Order.SeatId)),
                 (Rule: IsInvalid(order.UserId), Parameter: nameof(Order.UserId)),
+                (Rule: IsInvalid(order.Price), Parametr: nameof(Order.Price)),
                 (Rule: IsInvalid(order.StartDate), Parameter: nameof(Order.StartDate)),
                 (Rule: IsInvalid(order.EndDate), Parameter: nameof(Order.EndDate)),
                 (Rule: IsInvalid(order.Duration), Parameter: nameof(Order.Duration)),
@@ -87,6 +89,12 @@ namespace NajotBooking.Api.Services.Foundations.Orders
         {
             Condition = id == default,
             Message = "Id is required"
+        };
+
+        private static dynamic IsInvalid(decimal price) => new
+        {
+            Condition = price == default,
+            Message = "Price is required"
         };
 
         private static dynamic IsInvalid(int number) => new
