@@ -47,7 +47,7 @@ namespace NajotBooking.Api.Services.Foundations.Orders
             Validate(
                 (Rule: IsInvalid(order.SeatId), Parameter: nameof(Order.SeatId)),
                 (Rule: IsInvalid(order.UserId), Parameter: nameof(Order.UserId)),
-                (Rule: IsInvalid(order.Price), Parametr: nameof(Order.Price)),
+                (Rule: IsInvalid(order.Price), Parameter: nameof(Order.Price)),
                 (Rule: IsInvalid(order.StartDate), Parameter: nameof(Order.StartDate)),
                 (Rule: IsInvalid(order.EndDate), Parameter: nameof(Order.EndDate)),
                 (Rule: IsInvalid(order.Duration), Parameter: nameof(Order.Duration)),
