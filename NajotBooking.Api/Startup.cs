@@ -47,12 +47,13 @@ namespace NajotBooking.Api
             if (environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-
-                app.UseSwaggerUI(config => config.SwaggerEndpoint(
-                    url: "/swagger/v1/swagger.json",
-                    name: "NajotBooking.Api v1"));
             }
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(config => config.SwaggerEndpoint(
+                url: "/swagger/v1/swagger.json",
+                name: "NajotBooking.Api v1"));
 
             app.UseHttpsRedirection();
             app.UseRouting();
