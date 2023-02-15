@@ -69,11 +69,11 @@ namespace NajotBooking.Api.Controllers
         }
 
         [HttpGet("{orderId}")]
-        public async ValueTask<ActionResult<Order>> GetOrderByIdAsync(Guid Id)
+        public async ValueTask<ActionResult<Order>> GetOrderByIdAsync(Guid orderId)
         {
             try
             {
-                return await this.orderService.RetrieveOrderByIdAsync(Id);
+                return await this.orderService.RetrieveOrderByIdAsync(orderId);
             }
             catch (OrderDependencyException orderDependencyException)
             {
@@ -130,12 +130,12 @@ namespace NajotBooking.Api.Controllers
         }
 
         [HttpDelete("{orderId}")]
-        public async ValueTask<ActionResult<Order>> DeleteOrderByIdAsync(Guid Id)
+        public async ValueTask<ActionResult<Order>> DeleteOrderByIdAsync(Guid orderId)
         {
             try
             {
                 Order deletedOrder =
-                    await this.orderService.RemoveOrderByIdAsync(Id);
+                    await this.orderService.RemoveOrderByIdAsync(orderId);
 
                 return Ok(deletedOrder);
             }
